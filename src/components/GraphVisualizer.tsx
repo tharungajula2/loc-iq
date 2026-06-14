@@ -14,10 +14,6 @@ import { renderPrimaryIdentifierDetail, renderDataFieldDetail, renderDerivedColu
 export const GraphVisualizer: React.FC = () => {
   const { isAnalyzing, currentTrace, catalogue } = useAppContext();
 
-  const [viewMode, setViewMode] = useState<'full' | 'active'>('full');
-  const [playbackStep, setPlaybackStep] = useState<number>(-1);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackSpeed, setPlaybackSpeed] = useState<number>(3000); // 3 seconds per step
   const [selectedNode, setSelectedNode] = useState<{ type: string; item: any; label: string } | null>(null);
 
   const derivedCatalogue = useMemo(() => {
@@ -168,8 +164,6 @@ export const GraphVisualizer: React.FC = () => {
   const coloredNodes = useMemo(() => {
     return universe.nodes.map(n => {
       const isActive = activePath.activeNodes.has(n.id);
-      const isDimmed = viewMode === 'active' ? !isActive : false;
-      const opacity = isDimmed ? 0.05 : (viewMode === 'full' && !isActive && currentTrace ? 0.2 : 1);
       
       let color = '#94a3b8';
       let label = n.data.label as string;
@@ -197,22 +191,9 @@ export const GraphVisualizer: React.FC = () => {
         color = currentTrace.expected_output.truth_flag === 'GREEN' ? '#10b981' : currentTrace.expected_output.truth_flag === 'RED' ? '#ef4444' : '#f59e0b';
       }
 
-      let playbackOpacity = opacity;
-      if (playbackStep > -1) {
-        playbackOpacity = 0.05;
-        if (isActive) {
-          if (playbackStep >= 0 && n.data.type === 'identifier') playbackOpacity = 1;
-          if (playbackStep >= 1 && n.data.type === 'api') playbackOpacity = 1;
-          if (playbackStep >= 2 && n.data.type === 'field') playbackOpacity = 1;
-          if (playbackStep >= 3 && n.data.type === 'derived') playbackOpacity = 1;
-          if (playbackStep >= 4 && n.data.type === 'location') playbackOpacity = 1;
-          if (playbackStep >= 5 && n.data.type === 'output') playbackOpacity = 1;
-        }
-      }
-
       return {
         ...n,
-        hidden: isDimmed,
+        hidden: false,
         data: { ...n.data, label },
         style: {
           background: `${color}15`,
@@ -223,89 +204,47 @@ export const GraphVisualizer: React.FC = () => {
           fontSize: '10px',
           fontFamily: 'monospace',
           textAlign: 'center' as const,
-          boxShadow: isActive && playbackOpacity > 0.5 ? `0 0 15px ${color}60` : 'none',
+          boxShadow: `0 0 10px ${color}40`,
           width: 150,
-          opacity: playbackOpacity,
+          opacity: 1,
           transition: 'all 0.4s ease'
         }
       };
     });
-  }, [universe.nodes, activePath.activeNodes, viewMode, currentTrace, playbackStep]);
+  }, [universe.nodes, activePath.activeNodes, currentTrace]);
 
   const styledEdges = useMemo(() => {
     return universe.edges.map(e => {
       const activeEdge = activePath.activeEdges.get(e.id);
       const isActive = !!activeEdge;
-      const isDimmed = viewMode === 'active' ? !isActive : false;
-      const opacity = isDimmed ? 0 : (viewMode === 'full' && !isActive && currentTrace ? 0.05 : (isActive ? 1 : 0.1));
       
-      const color = activeEdge ? activeEdge.color : '#475569';
-      const weight = activeEdge ? activeEdge.weight : 0.2;
-      const label = activeEdge ? activeEdge.label : undefined;
-
-      let edgeOpacity = opacity;
-      if (playbackStep > -1) {
-        edgeOpacity = 0.02;
-        if (isActive) {
-          const sNode = universe.nodes.find(n => n.id === e.source);
-          const tNode = universe.nodes.find(n => n.id === e.target);
-          if (sNode && tNode) {
-            if (playbackStep >= 1 && sNode.data.type === 'identifier' && tNode.data.type === 'api') edgeOpacity = 1;
-            if (playbackStep >= 2 && sNode.data.type === 'api' && tNode.data.type === 'field') edgeOpacity = 1;
-            if (playbackStep >= 3 && sNode.data.type === 'field' && tNode.data.type === 'derived') edgeOpacity = 1;
-            if (playbackStep >= 4 && sNode.data.type === 'derived' && tNode.data.type === 'location') edgeOpacity = 1;
-            if (playbackStep >= 5 && sNode.data.type === 'location' && tNode.data.type === 'output') edgeOpacity = 1;
-          }
-        }
+      const sNode = universe.nodes.find(n => n.id === e.source);
+      let defaultColor = '#475569';
+      if (sNode) {
+        if (sNode.data.type === 'identifier') defaultColor = '#a855f750';
+        if (sNode.data.type === 'api') defaultColor = '#3b82f650';
+        if (sNode.data.type === 'field') defaultColor = '#0ea5e950';
+        if (sNode.data.type === 'derived') defaultColor = '#10b98150';
       }
+
+      const color = activeEdge ? activeEdge.color : defaultColor;
+      const weight = activeEdge ? activeEdge.weight : 0.5;
+      const label = activeEdge ? activeEdge.label : undefined;
 
       return {
         ...e,
-        hidden: isDimmed,
+        hidden: false,
         label,
-        animated: isActive && edgeOpacity > 0.5,
-        style: { stroke: color, strokeWidth: Math.max(1, weight * 4), opacity: edgeOpacity, transition: 'all 0.4s ease' },
+        animated: true,
+        style: { stroke: color, strokeWidth: Math.max(1.5, weight * 4), opacity: isActive ? 1 : 0.6, transition: 'all 0.4s ease' },
         markerEnd: { type: MarkerType.ArrowClosed, color: color },
         labelStyle: { fill: color, fontSize: 10, fontWeight: 700 },
         labelBgStyle: { fill: '#0f172a', fillOpacity: 0.8 }
       };
     });
-  }, [universe.edges, activePath.activeEdges, viewMode, currentTrace, universe.nodes, playbackStep]);
+  }, [universe.edges, activePath.activeEdges, currentTrace, universe.nodes]);
 
-  useEffect(() => {
-    let interval: any;
-    if (isPlaying && playbackStep < 6) {
-      interval = setInterval(() => {
-        setPlaybackStep(s => s + 1);
-      }, playbackSpeed);
-    } else if (playbackStep >= 6) {
-      setIsPlaying(false);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, playbackStep, playbackSpeed]);
 
-  const [nodes, setNodes] = useState<Node[]>(coloredNodes);
-  const [edges, setEdges] = useState<Edge[]>(styledEdges);
-
-  useEffect(() => {
-    setNodes(coloredNodes);
-    setEdges(styledEdges);
-  }, [coloredNodes, styledEdges]);
-
-  const getPlaybackCaption = () => {
-    if (!currentTrace) return "No active trace to play.";
-    const isFraud = currentTrace.expected_output?.truth_flag === 'RED';
-    switch(playbackStep) {
-      case 0: return `Step 1 — We start with the primary identifiers (e.g. ${Object.keys(currentTrace.input)[0]}).`;
-      case 1: return `Step 2 — Identifiers are dispatched to external APIs and internal databases.`;
-      case 2: return `Step 3 — Sources return raw payload data.`;
-      case 3: return `Step 4 — Raw data is converted into derived signals with trust weights.`;
-      case 4: return `Step 5 — Signals vote on Candidate Locations. ${isFraud ? '(Proxy IP detected and down-weighted).' : ''}`;
-      case 5: return `Step 6 — Votes are tallied and candidates are ranked.`;
-      case 6: return `Step 7 — Declared Location contradicts the cluster → Truth Flag ${currentTrace.expected_output?.truth_flag}.`;
-      default: return "Ready to simulate trace.";
-    }
-  };
 
   if (!isAnalyzing && !currentTrace) {
     return (
@@ -332,39 +271,7 @@ export const GraphVisualizer: React.FC = () => {
 
   return (
     <div className="relative w-full h-full min-h-[700px] flex flex-col rounded-xl overflow-hidden border border-border/50 shadow-2xl">
-      {/* Top Toolbar */}
-      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-start pointer-events-none">
-        <div className="bg-background/80 backdrop-blur border rounded-lg p-2 flex gap-2 pointer-events-auto shadow-lg">
-          <Button variant={viewMode === 'full' ? 'default' : 'outline'} size="sm" onClick={() => { setViewMode('full'); setPlaybackStep(-1); setIsPlaying(false); }}>
-            Full Universe
-          </Button>
-          <Button variant={viewMode === 'active' ? 'default' : 'outline'} size="sm" onClick={() => { setViewMode('active'); setPlaybackStep(-1); setIsPlaying(false); }}>
-            Active Trace Only
-          </Button>
-          <div className="w-px bg-border mx-2" />
-          <Button 
-            variant={playbackStep > -1 ? 'default' : 'outline'} 
-            size="sm" 
-            onClick={() => { setPlaybackStep(0); setIsPlaying(true); setViewMode('full'); }} 
-            className={playbackStep > -1 ? "bg-emerald-500 text-slate-950 hover:bg-emerald-600 border-transparent font-semibold" : "text-emerald-500 border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400"}
-          >
-            <Play className="w-4 h-4 mr-1" /> Play Trace
-          </Button>
-          {playbackStep > -1 && (
-            <>
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsPlaying(!isPlaying)}>
-                {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setPlaybackStep(s => Math.min(s + 1, 6))}>
-                <StepForward className="w-4 h-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setPlaybackStep(-1); setIsPlaying(false); }}>
-                <RotateCcw className="w-4 h-4" />
-              </Button>
-            </>
-          )}
-        </div>
-        
+      <div className="absolute top-4 left-4 z-10 pointer-events-none">
         {/* Legend */}
         <div className="bg-background/90 backdrop-blur border rounded-lg p-3 text-xs pointer-events-auto shadow-lg flex flex-col gap-2">
           <h4 className="font-bold text-muted-foreground uppercase tracking-wider mb-1">Graph Legend</h4>
@@ -380,13 +287,14 @@ export const GraphVisualizer: React.FC = () => {
       </div>
 
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={(changes) => setNodes((nds) => applyNodeChanges(changes, nds))}
-        onEdgesChange={(changes) => setEdges((eds) => applyEdgeChanges(changes, eds))}
+        nodes={coloredNodes}
+        edges={styledEdges}
+        onNodesChange={() => {}}
+        onEdgesChange={() => {}}
         onNodeClick={(_, node) => {
-           if (node.data.item) {
-             setSelectedNode({ type: node.data.type as string, item: node.data.item, label: node.data.label as string });
+           const data = node.data as any;
+           if (data.item) {
+             setSelectedNode({ type: data.type as string, item: data.item, label: data.label as string });
            }
         }}
         fitView
@@ -399,19 +307,7 @@ export const GraphVisualizer: React.FC = () => {
         <Controls className="bg-background border-border/50" />
       </ReactFlow>
 
-      {/* Playback Caption Bar */}
-      {playbackStep > -1 && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 w-[600px] pointer-events-none">
-          <div className="bg-background/95 backdrop-blur border-2 border-primary/50 shadow-2xl rounded-xl p-4 text-center animate-in slide-in-from-bottom-5 pointer-events-auto">
-            <p className="text-lg font-medium text-foreground">{getPlaybackCaption()}</p>
-            <div className="w-full bg-muted h-1 mt-3 rounded-full overflow-hidden">
-              <div className="h-full bg-primary transition-all duration-500" style={{ width: `${(playbackStep / 6) * 100}%` }} />
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Detail Panel Sheet */}
       <Sheet open={!!selectedNode} onOpenChange={(open) => !open && setSelectedNode(null)}>
         <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
           <SheetHeader className="mb-6">

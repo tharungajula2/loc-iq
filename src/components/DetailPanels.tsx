@@ -1,7 +1,39 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-export const renderPrimaryIdentifierDetail = (item: any, isTrace: boolean) => (
+import masterclassData from '../data/masterclass.json';
+
+const MarkdownText = ({ text }: { text: string }) => {
+  return (
+    <div className="space-y-3 text-sm leading-relaxed text-foreground/90">
+      {text.split('\n').map((line, i) => {
+        if (!line.trim()) return null;
+        // Basic bold parser
+        const parts = line.split(/(\*\*.*?\*\*|`.*?`)/g);
+        return (
+          <p key={i} className={line.startsWith('- ') ? 'ml-4 flex gap-2' : 'mt-2'}>
+            {line.startsWith('- ') && <span className="text-primary mt-1">•</span>}
+            <span>
+              {parts.map((p, j) => {
+                if (p.startsWith('**') && p.endsWith('**')) {
+                  return <strong key={j} className="text-foreground">{p.slice(2, -2)}</strong>;
+                }
+                if (p.startsWith('`') && p.endsWith('`')) {
+                  return <code key={j} className="bg-muted px-1 py-0.5 rounded text-xs font-mono">{p.slice(1, -1)}</code>;
+                }
+                return p.startsWith('- ') ? p.substring(2) : p;
+              })}
+            </span>
+          </p>
+        );
+      })}
+    </div>
+  );
+};
+
+export const renderPrimaryIdentifierDetail = (item: any, isTrace: boolean) => {
+  const deepDiveText = (masterclassData as Record<string, string>)[item.identifier];
+  return (
   <div className="space-y-4">
     <div className="grid grid-cols-2 gap-4">
       <div>
@@ -47,13 +79,28 @@ export const renderPrimaryIdentifierDetail = (item: any, isTrace: boolean) => (
       <h4 className="text-sm font-medium text-muted-foreground">Example</h4>
       <code className="text-xs bg-muted px-2 py-1 rounded mt-1 block">{item.example}</code>
     </div>
+
+    {deepDiveText && (
+      <div className="mt-8 pt-6 border-t">
+        <h4 className="text-sm font-bold text-primary mb-3 uppercase tracking-wider flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+          Masterclass Deep Dive
+        </h4>
+        <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 shadow-inner">
+          <MarkdownText text={deepDiveText} />
+        </div>
+      </div>
+    )}
   </div>
-);
+  );
+};
 
 export const renderDataFieldDetail = (item: any, isTrace: boolean) => {
   // If it's in trace mode, it might have 'value' and 'resolves_to' properties (from FetchedFieldTrace)
   // We need to fetch the original catalogue item to show the full explanation.
   const catalogueItem = isTrace ? item._catalogueRef : item;
+  const targetKey = catalogueItem?.data_field || item.data_field;
+  const deepDiveText = (masterclassData as Record<string, string>)[targetKey];
   
   return (
     <div className="space-y-4">
@@ -121,13 +168,27 @@ export const renderDataFieldDetail = (item: any, isTrace: boolean) => {
             <h4 className="text-sm font-medium text-muted-foreground">Example</h4>
             <code className="text-xs bg-muted px-2 py-1 rounded mt-1 block">{catalogueItem.example}</code>
           </div>
+
+          {deepDiveText && (
+            <div className="mt-8 pt-6 border-t">
+              <h4 className="text-sm font-bold text-sky-500 mb-3 uppercase tracking-wider flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
+                Masterclass Deep Dive
+              </h4>
+              <div className="bg-sky-500/5 border border-sky-500/20 rounded-xl p-4 shadow-inner">
+                <MarkdownText text={deepDiveText} />
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
   );
 };
 
-export const renderApiUniverseDetail = (item: any) => (
+export const renderApiUniverseDetail = (item: any) => {
+  const deepDiveText = (masterclassData as Record<string, string>)[item.source];
+  return (
   <div className="space-y-4">
     <div className="grid grid-cols-2 gap-4">
       <div>
@@ -190,8 +251,21 @@ export const renderApiUniverseDetail = (item: any) => (
         </div>
       </div>
     </div>
+
+    {deepDiveText && (
+      <div className="mt-8 pt-6 border-t">
+        <h4 className="text-sm font-bold text-blue-500 mb-3 uppercase tracking-wider flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+          Masterclass Deep Dive
+        </h4>
+        <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4 shadow-inner">
+          <MarkdownText text={deepDiveText} />
+        </div>
+      </div>
+    )}
   </div>
 );
+};
 
 export const renderDerivedColumnDetail = (item: any, isTrace: boolean) => {
   return (

@@ -47,33 +47,33 @@ If you open the Loc-IQ builder console right now, you'll see a series of tabs. T
 
 ---
 
-## 3. Step-by-Step: What happens when you click "Play Trace"?
+## 3. Step-by-Step: Interrogating the Knowledge Graph
 
-In the Graph Engine tab, we've built a "Play Trace" feature. When you click that green button, time slows down and we walk you through the 7-step process of exactly how Loc-IQ thinks:
+In the Graph Engine tab, we've built a full "Knowledge Graph" visualizer. Instead of just a passive video, the graph is a living, interactive investigation board. Here is how Loc-IQ thinks:
 
 **Step 1: Identifiers Injected**
-We start with the raw input—the PAN card, the mobile number, the declared PIN code.
+We start with the raw input—the PAN card, the mobile number, the declared PIN code. These are the purple nodes on the left.
 
 **Step 2: Dispatch to APIs**
-The app reaches out to the internet. You'll see lines shoot out connecting the identifiers to external APIs (like CIBIL, Experian, Razorpay IFSC, IP-API).
+The app reaches out to the internet. The blue nodes represent external APIs (like CIBIL, Experian, Razorpay IFSC, IP-API).
 
 **Step 3: Fields Extracted**
-The APIs reply with raw data fields. The graph illuminates the extracted footprints—IP addresses, branch codes, historical addresses.
+The APIs reply with raw data fields. The graph illuminates the extracted footprints—IP addresses, branch codes, historical addresses (Sky blue nodes).
 
 **Step 4: Signals Derived**
-Loc-IQ converts the raw data into mathematical "signals". Here, it applies weights. For example, a proxy IP gets down-weighted (trust factor 0.1), while a recent credit bureau address gets a high weight.
+Loc-IQ converts the raw data into mathematical "signals" (Green nodes). Here, it applies weights. For example, a proxy IP gets down-weighted (trust factor 0.1), while a recent credit bureau address gets a high weight.
 
 **Step 5: Locations Pinpointed**
-The signals vote on candidate locations. Thick lines point to the most probable pincodes.
+The signals vote on candidate locations (Amber nodes). Thick lines point to the most probable pincodes based on the math.
 
-**Step 6: Confidence Scored**
-The math finishes. The engine aggregates all the weights and assigns a confidence score out of 100 to the candidate locations.
-
-**Step 7: Truth Flag Issued**
+**Step 6: Truth Flag Issued**
 The app compares the winning location to what the customer originally declared:
 *   **GREEN (Match):** The network says they live in 560001, and the customer *declared* 560001. Truth!
 *   **AMBER (Partial):** The network says they live in 560003, but they declared 560001. Medium risk.
 *   **RED (Severe):** The network says they are in Frankfurt using a VPN, but they declared Delhi. High risk! Fraud alert!
+
+**Masterclass Deep Dives:**
+Click on **ANY** node in the graph. A side panel will slide out revealing a "Masterclass Deep Dive". This pulls from an extensive internal encyclopedia that explains *exactly* what that node is, how the API works, and what the data implies in a real-world forensic scenario.
 
 ---
 
@@ -110,10 +110,10 @@ For developers, engineers, or technical architects reviewing this codebase, the 
 *   **Styling:** Tailwind CSS (Dark mode, enterprise palettes, custom UI components via shadcn/ui).
 *   **Data Flow:** React Context API (`AppContext.tsx`) orchestrating global state.
 
-**2. The Graph Engine (`src/components/GraphVisualizer.tsx`)**
+**2. The Graph Engine & Documentation (`src/components/GraphVisualizer.tsx`)**
 *   We utilized **@xyflow/react** (React Flow) to construct a massive directed acyclic graph (DAG) representing the full 170-node API universe. 
 *   **Layered Layout Engine:** Nodes are procedurally plotted into 6 distinct X-axis layers (Identifiers → APIs → Fields → Derived → Locations → Output). 
-*   **State Machine Animation:** A `playbackStep` integer state drives CSS opacity transitions and edge coloring to simulate data flow over time, creating a cinematic storytelling experience without heavy video assets.
+*   **Masterclass Integration:** We parsed a massive internal documentation file into `masterclass.json`. When the user clicks any node in the graph, the UI dynamically pulls in rich markdown content explaining the forensic value of that specific data point (`src/components/DetailPanels.tsx`).
 
 **3. The Math Model (`src/data/data_demo_cases.json`)**
 *   The actual probability mechanics use a weighted sum algorithm: `effective_weight = base_weight * recency_factor * ip_trust_factor`.

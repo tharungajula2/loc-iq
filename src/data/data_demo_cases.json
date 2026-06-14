@@ -255,392 +255,221 @@
   },
   "maximum": {
     "case_label": "MAXIMUM",
-    "summary": "This trace hits almost every API in the universe to show maximum data points.",
+    "summary": "A sprawling real-world forensic scenario involving heavy cross-referencing: a sophisticated identity theft operation where the user registered an account in Mumbai, logged in via multiple foreign proxies, used a ported mobile number registered in Delhi, provided a PAN linked to Kolkata, and conducted UPI transactions at a merchant mapped to Pune. The system stitches 20+ distinct API calls to map this complex web and pinpoint the truth.",
     "identifiers": {
-      "mobile_number": "9999999999",
-      "pan": "MAX1234567",
-      "aadhaar_number": "123456789012",
-      "email_id": "max@demo.com",
-      "customer_key": "CUST-MAX-01",
-      "case_id": "CASE-MAX-01",
-      "declared_pincode": "400001"
+      "mobile_number": "9811122233",
+      "pan": "BXXXX9999Y",
+      "aadhaar_number": "999988887777",
+      "email_id": "scammer.xyz@proton.me",
+      "customer_key": "CUST-HV-1029",
+      "case_id": "CASE-FRAUD-RING-7"
     },
     "fetched_fields": [
       {
-        "data_field": "event_ts",
-        "value": "DEMO_MAX_event_ts",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "event_type",
-        "value": "DEMO_MAX_event_type",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "source_system",
-        "value": "DEMO_MAX_source_system",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
         "data_field": "public_ip",
-        "value": "DEMO_MAX_public_ip",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
+        "value": "143.244.50.12 (DigitalOcean)",
+        "resolves_to": "Singapore",
+        "freshness_date": "2026-06-15",
+        "proxy": true
       },
       {
         "data_field": "declared_pincode",
-        "value": "DEMO_MAX_declared_pincode",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "400001",
+        "resolves_to": "Mumbai (MH)",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "declared_city",
-        "value": "DEMO_MAX_declared_city",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "Mumbai",
+        "resolves_to": "Mumbai (MH)",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "declared_state",
-        "value": "DEMO_MAX_declared_state",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "Maharashtra",
+        "resolves_to": "Mumbai (MH)",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "full_address_text",
-        "value": "DEMO_MAX_full_address_text",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "Flat 4B, Sea View Apts, Colaba",
+        "resolves_to": "Mumbai (MH)",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "branch_ifsc",
-        "value": "DEMO_MAX_branch_ifsc",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "sourcing_branch_id",
-        "value": "DEMO_MAX_sourcing_branch_id",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "servicing_branch_id",
-        "value": "DEMO_MAX_servicing_branch_id",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "device_id_hash",
-        "value": "DEMO_MAX_device_id_hash",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "app_instance_id",
-        "value": "DEMO_MAX_app_instance_id",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "session_id_hash",
-        "value": "DEMO_MAX_session_id_hash",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "HDFC0000001",
+        "resolves_to": "Mumbai (MH)",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "user_agent",
-        "value": "DEMO_MAX_user_agent",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "resolves_to": "Desktop",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "device_timezone",
-        "value": "DEMO_MAX_device_timezone",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "device_language_or_locale",
-        "value": "DEMO_MAX_device_language_or_locale",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "gps_lat",
-        "value": "DEMO_MAX_gps_lat",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "gps_lon",
-        "value": "DEMO_MAX_gps_lon",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "gps_accuracy_meters",
-        "value": "DEMO_MAX_gps_accuracy_meters",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "Asia/Kolkata",
+        "resolves_to": "India",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "wifi_bssid_hashes",
-        "value": "DEMO_MAX_wifi_bssid_hashes",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "00:14:22:01:23:45",
+        "resolves_to": "Pune (MH)",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "cell_mcc_mnc_lac_cellid",
-        "value": "DEMO_MAX_cell_mcc_mnc_lac_cellid",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "login_event_history",
-        "value": "DEMO_MAX_login_event_history",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "repayment_event_history",
-        "value": "DEMO_MAX_repayment_event_history",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "contact_center_events",
-        "value": "DEMO_MAX_contact_center_events",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "dormant_account_reactivation",
-        "value": "DEMO_MAX_dormant_account_reactivation",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "atm_transaction_location",
-        "value": "DEMO_MAX_atm_transaction_location",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
-        "freshness_date": "2026-06-15"
-      },
-      {
-        "data_field": "pos_merchant_location",
-        "value": "DEMO_MAX_pos_merchant_location",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "MCC:404 MNC:11 LAC:450 Cell:892",
+        "resolves_to": "Pune (MH)",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "upi_merchant_or_vpa_metadata",
-        "value": "DEMO_MAX_upi_merchant_or_vpa_metadata",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "Pune Merchant (VPA: merchant@okaxis)",
+        "resolves_to": "Pune (MH)",
         "freshness_date": "2026-06-15"
       },
       {
         "data_field": "cash_deposit_branch",
-        "value": "DEMO_MAX_cash_deposit_branch",
-        "source_api": "Various APIs",
-        "resolves_to": "Mumbai, Maharashtra",
+        "value": "HDFC Pune Camp Branch",
+        "resolves_to": "Pune (MH)",
+        "freshness_date": "2026-06-15"
+      },
+      {
+        "data_field": "bureau_address_history",
+        "value": "700001 (Kolkata), 411001 (Pune)",
+        "resolves_to": "Kolkata (WB) & Pune (MH)",
         "freshness_date": "2026-06-15"
       }
     ],
     "signals": [
       {
-        "signal": "event_ts evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
+        "signal": "IP geolocation",
+        "location_id": "singapore",
+        "location_label": "Singapore (VPN Exit)",
+        "base_weight": 0.9,
         "recency_factor": 1,
-        "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
+        "ip_trust_factor": 0.1,
+        "source_api": "ip-api.com JSON endpoint",
+        "evidence": "IP matches datacenter block; heavily penalized."
       },
       {
-        "signal": "event_type evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
+        "signal": "Telecom circle",
+        "location_id": "110001",
+        "location_label": "Delhi (Mobile Origin)",
+        "base_weight": 0.3,
+        "recency_factor": 0.5,
         "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
+        "source_api": "Python phonenumbers library",
+        "evidence": "Number originated in Delhi."
       },
       {
-        "signal": "source_system evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
+        "signal": "Bureau current address",
+        "location_id": "700001",
+        "location_label": "Kolkata 700001 (Bureau History)",
+        "base_weight": 0.8,
+        "recency_factor": 0.7,
         "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
+        "source_api": "Credit bureaus: CIBIL / Experian / Equifax / CRIF",
+        "evidence": "Registered PAN address in Kolkata."
       },
       {
-        "signal": "public_ip evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
+        "signal": "Bureau previous address",
+        "location_id": "411001",
+        "location_label": "Pune 411001 (Actual Operation)",
+        "base_weight": 0.7,
+        "recency_factor": 0.8,
         "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
+        "source_api": "Credit bureaus: CIBIL / Experian / Equifax / CRIF",
+        "evidence": "Recent credit pull originated in Pune."
       },
       {
-        "signal": "declared_pincode evidence",
+        "signal": "Branch IFSC location",
         "location_id": "400001",
-        "location_label": "Mumbai 400001",
+        "location_label": "Mumbai 400001 (Declared)",
         "base_weight": 0.5,
-        "recency_factor": 1,
+        "recency_factor": 0.6,
         "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
+        "source_api": "Razorpay IFSC API",
+        "evidence": "Account opened in Mumbai."
       },
       {
-        "signal": "declared_city evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
+        "signal": "UPI Merchant / VPA Location",
+        "location_id": "411001",
+        "location_label": "Pune 411001 (Actual Operation)",
+        "base_weight": 0.9,
         "recency_factor": 1,
         "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
+        "source_api": "NPCI / Bank UPI Switch (via aggregator)",
+        "evidence": "Live high-frequency transactions at a Pune merchant."
       },
       {
-        "signal": "declared_state evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
+        "signal": "Cash deposit branch",
+        "location_id": "411001",
+        "location_label": "Pune 411001 (Actual Operation)",
+        "base_weight": 0.85,
+        "recency_factor": 0.9,
         "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
+        "source_api": "Core Banking System (CBS) / LMS",
+        "evidence": "Physical cash deposits made at Pune branch."
       },
       {
-        "signal": "full_address_text evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
+        "signal": "Cell Tower (MCC/MNC/LAC/CellID)",
+        "location_id": "411001",
+        "location_label": "Pune 411001 (Actual Operation)",
+        "base_weight": 0.95,
         "recency_factor": 1,
         "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
+        "source_api": "Unwired Labs / OpenCelliD",
+        "evidence": "Cell tower triangulates to Pune."
       },
       {
-        "signal": "branch_ifsc evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
+        "signal": "Wi-Fi BSSID geolocation",
+        "location_id": "411001",
+        "location_label": "Pune 411001 (Actual Operation)",
+        "base_weight": 0.95,
         "recency_factor": 1,
         "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
-      },
-      {
-        "signal": "sourcing_branch_id evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
-        "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
-      },
-      {
-        "signal": "servicing_branch_id evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
-        "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
-      },
-      {
-        "signal": "device_id_hash evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
-        "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
-      },
-      {
-        "signal": "app_instance_id evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
-        "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
-      },
-      {
-        "signal": "session_id_hash evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
-        "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
-      },
-      {
-        "signal": "user_agent evidence",
-        "location_id": "400001",
-        "location_label": "Mumbai 400001",
-        "base_weight": 0.5,
-        "recency_factor": 1,
-        "ip_trust_factor": 1,
-        "source_api": "Multiple",
-        "evidence": "Max scenario dummy evidence"
+        "source_api": "Google / Mozilla Geolocation API",
+        "evidence": "Wi-Fi scan matches Pune router MACs."
       }
     ],
     "expected_output": {
       "ranked": [
         {
           "rank": 1,
-          "location": "Mumbai 400001",
-          "confidence": 100
+          "location": "Pune 411001 (Actual Operation)",
+          "confidence": 72
+        },
+        {
+          "rank": 2,
+          "location": "Kolkata 700001 (Bureau History)",
+          "confidence": 15
+        },
+        {
+          "rank": 3,
+          "location": "Mumbai 400001 (Declared)",
+          "confidence": 8
+        },
+        {
+          "rank": 4,
+          "location": "Delhi (Mobile Origin)",
+          "confidence": 4
+        },
+        {
+          "rank": 5,
+          "location": "Singapore (VPN Exit)",
+          "confidence": 1,
+          "note": "proxy - discarded"
         }
       ],
-      "top_candidate": "400001",
+      "top_candidate": "411001",
       "declared": "400001",
-      "truth_flag": "GREEN",
-      "reason": "Maximum data test case."
+      "truth_flag": "RED",
+      "reason": "Severe mismatch. Declared Mumbai, but live behavioral evidence (UPI, Cash Deposits, Cell Towers, Wi-Fi) overwhelmingly points to Pune, while routing through a Singapore VPN. High-risk fraud ring."
     }
   }
 }
