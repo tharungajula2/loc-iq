@@ -342,7 +342,12 @@ export const GraphVisualizer: React.FC = () => {
             Active Trace Only
           </Button>
           <div className="w-px bg-border mx-2" />
-          <Button variant={playbackStep > -1 ? 'default' : 'outline'} size="sm" onClick={() => { setPlaybackStep(0); setIsPlaying(true); setViewMode('full'); }} className="text-emerald-500 border-emerald-500/30">
+          <Button 
+            variant={playbackStep > -1 ? 'default' : 'outline'} 
+            size="sm" 
+            onClick={() => { setPlaybackStep(0); setIsPlaying(true); setViewMode('full'); }} 
+            className={playbackStep > -1 ? "bg-emerald-500 text-slate-950 hover:bg-emerald-600 border-transparent font-semibold" : "text-emerald-500 border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-400"}
+          >
             <Play className="w-4 h-4 mr-1" /> Play Trace
           </Button>
           {playbackStep > -1 && (

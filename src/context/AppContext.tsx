@@ -16,7 +16,8 @@ export const dataFields = dataFieldsRaw as DataFieldDef[];
 export const apiUniverse = apiUniverseRaw as ApiUniverseDef[];
 export const demoCases = {
   clean: demoCasesRaw.clean as DemoCaseDef,
-  fraud: demoCasesRaw.fraud as DemoCaseDef
+  fraud: demoCasesRaw.fraud as DemoCaseDef,
+  maximum: demoCasesRaw.maximum as DemoCaseDef
 };
 
 interface AppContextType {
@@ -25,7 +26,7 @@ interface AppContextType {
   isAnalyzing: boolean;
   currentTrace: CurrentTrace | null;
   logs: string[];
-  loadDemoCase: (caseType: 'clean' | 'fraud') => Promise<void>;
+  loadDemoCase: (caseType: 'clean' | 'fraud' | 'maximum') => Promise<void>;
   clearTrace: () => void;
   // Expose catalogues globally for easy access
   catalogue: {
@@ -61,7 +62,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setLogs([]);
   };
 
-  const loadDemoCase = async (caseType: 'clean' | 'fraud') => {
+  const loadDemoCase = async (caseType: 'clean' | 'fraud' | 'maximum') => {
     setIsAnalyzing(true);
     setLogs([]);
     

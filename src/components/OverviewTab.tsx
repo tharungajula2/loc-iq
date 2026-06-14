@@ -8,7 +8,7 @@ export function OverviewTab({ setActiveTab }: { setActiveTab: (tab: string) => v
   const { loadDemoCase, catalogue } = useAppContext();
   const [showIntro, setShowIntro] = useState(true);
 
-  const handleDemo = async (type: 'clean' | 'fraud') => {
+  const handleDemo = async (type: 'clean' | 'fraud' | 'maximum') => {
     setActiveTab('graph-engine');
     await loadDemoCase(type);
   };
@@ -59,26 +59,37 @@ export function OverviewTab({ setActiveTab }: { setActiveTab: (tab: string) => v
         </Card>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-primary/5 border-primary/20">
           <CardHeader>
-            <CardTitle>Load Clean Demo</CardTitle>
-            <p className="text-sm text-muted-foreground">Everything agrees on Bengaluru. Truth flag GREEN.</p>
+            <CardTitle className="text-lg">Clean Demo</CardTitle>
+            <p className="text-xs text-muted-foreground">Everything agrees on Bengaluru. Truth flag GREEN.</p>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => handleDemo('clean')} className="w-full" size="lg">
-              <Play className="w-4 h-4 mr-2" /> Simulate Clean Case
+            <Button onClick={() => handleDemo('clean')} className="w-full" size="sm">
+              <Play className="w-3 h-3 mr-2" /> Simulate
             </Button>
           </CardContent>
         </Card>
         <Card className="bg-destructive/5 border-destructive/20">
           <CardHeader>
-            <CardTitle>Load Fraud Demo</CardTitle>
-            <p className="text-sm text-muted-foreground">Declared Delhi, but evidence shows AP + VPN. Truth flag RED.</p>
+            <CardTitle className="text-lg">Fraud Demo</CardTitle>
+            <p className="text-xs text-muted-foreground">Proxy IP and conflicting evidence. Truth flag RED.</p>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => handleDemo('fraud')} variant="destructive" className="w-full" size="lg">
-              <Play className="w-4 h-4 mr-2" /> Simulate Fraud Case
+            <Button onClick={() => handleDemo('fraud')} variant="destructive" className="w-full" size="sm">
+              <Play className="w-3 h-3 mr-2" /> Simulate
+            </Button>
+          </CardContent>
+        </Card>
+        <Card className="bg-amber-500/5 border-amber-500/20">
+          <CardHeader>
+            <CardTitle className="text-lg">Maximum Data</CardTitle>
+            <p className="text-xs text-muted-foreground">Hits all available APIs to showcase engine scale.</p>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => handleDemo('maximum')} variant="outline" className="w-full border-amber-500/50 text-amber-600 hover:bg-amber-500/10" size="sm">
+              <Play className="w-3 h-3 mr-2" /> Simulate
             </Button>
           </CardContent>
         </Card>

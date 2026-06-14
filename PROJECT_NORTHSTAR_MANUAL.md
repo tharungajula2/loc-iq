@@ -30,81 +30,68 @@ Loc-IQ doesn't use GPS. It uses a **Location Probability Model**. It gathers all
 
 ## 2. Demystifying the Black Box: Where is the Excel Data?
 
-If you open the Loc-IQ app right now, you won't see "Derived Columns" or "API Handshakes" written on the screen. It feels like the app is ignoring the Master Excel Workbook we created. 
+If you open the Loc-IQ builder console right now, you'll see a series of tabs. This console is the direct manifestation of your Excel workbook. Let's translate your Excel workbook directly into the app you see:
 
-It is absolutely not ignoring it! It is just happening **under the hood**, inside the brain of the app (the "Backend" or "Data Service"). Let's translate your Excel workbook directly into the app you see:
-
-*   **Excel Sheet 3 (Primary Identifiers) = The Input Form on the Left Panel.**
-    When you look at the left side of the dashboard, you see text boxes for Mobile Number, PAN, Aadhaar, etc. This is literally Sheet 3 brought to life. It is the starting clue we hand to our detective.
-
-*   **Excel Sheet 5 (API Universe) & Sheet 4 (Data Fields) = The Invisible Fetcher (`mockDataService.ts`).**
-    When you click the button, the app pretends to reach out to the real world (Telecom companies, Credit Bureaus). Because we are building a prototype, it doesn't *actually* call the real government databases yet. Instead, we wrote an invisible script that pretends to be the internet, immediately handing back the "Data Fields" you designed in Sheet 4. 
-
-*   **Derived Columns = The Math Engine (`graphEngine.ts`).**
-    Once the app gathers the clues, it has to make sense of them. The "Derived Columns" from your Excel sheet are actually mathematical formulas running at lightning speed inside the code to weigh which clues are trustworthy and which are garbage.
-
-*   **Excel Sheet 2 (Output) = The Leaderboard and Entity Inspector on the Right Panel.**
-    Finally, the app prints out its final answer on the right side of the screen. The "Candidate Pincodes", "Confidence Scores", and "Truth Flags" are exactly what you designed in Sheet 2.
+*   **Primary Identifiers Tab**
+    This is literally Sheet 3 brought to life. These are the 6 starting clues we hand to our detective (like PAN, Mobile Number, Aadhaar).
+*   **API Universe Tab**
+    This translates Sheet 5. It shows the 46 different external databases, government registries, and telecom APIs Loc-IQ connects to.
+*   **Fetched Data Fields Tab**
+    This is Sheet 4. Here, you see exactly what raw data is pulled back from those APIs (e.g., "Bureau Address History", "Telecom Circle"). You can see whether the data sits internally at the bank, or requires customer consent.
+*   **Derived Columns Tab**
+    Once the app gathers the raw clues, it has to make sense of them. The "Derived Columns" are mathematical formulas running at lightning speed to weigh which clues are trustworthy and which are garbage.
+*   **Graph Engine Tab**
+    This is the visual detective's pinboard. It maps out all the nodes (Identifiers, APIs, Data Fields, Signals) and shows you exactly how the data flows from start to finish.
+*   **Output Tab**
+    Finally, the app prints out its final answer. The "Candidate Pincodes", "Confidence Scores", and "Truth Flags" are exactly what you designed in Sheet 2.
 
 ---
 
-## 3. Step-by-Step: What happens when you click "Initiate Trace"?
+## 3. Step-by-Step: What happens when you click "Play Trace"?
 
-Let's slow time down. When you click that blue "Initiate Trace" button, here is the exact chronological sequence of events happening in milliseconds:
+In the Graph Engine tab, we've built a "Play Trace" feature. When you click that green button, time slows down and we walk you through the 7-step process of exactly how Loc-IQ thinks:
 
-**Step A: The Clue is Handed Over**
-You type in a PAN card (e.g., CLEAN1111A) and a Declared PIN Code (the PIN the customer claims they live at).
+**Step 1: Identifiers Injected**
+We start with the raw input—the PAN card, the mobile number, the declared PIN code.
 
-**Step B: The App Goes into "Analyzing" Mode**
-The screen pulses. The Telemetry Log (the hacking-style text at the bottom left) starts scrolling. The app is reaching into its invisible engine and asking for evidence. It "downloads" their Bureau Address history, their IP Geolocation, and their Bank Branch location.
+**Step 2: Dispatch to APIs**
+The app reaches out to the internet. You'll see lines shoot out connecting the identifiers to external APIs (like CIBIL, Experian, Razorpay IFSC, IP-API).
 
-**Step C: The Graph Engine does the Math**
-The app throws all this evidence onto a digital pinboard (The Graph). It draws a node (a dot) for the PAN card. It draws dots for the PIN codes it found on the internet. Then, it draws strings connecting them. If a piece of evidence is highly trusted (like a Credit Bureau report), it draws a very thick string. If it's weak (like an IP address that can be faked), it draws a thin string.
+**Step 3: Fields Extracted**
+The APIs reply with raw data fields. The graph illuminates the extracted footprints—IP addresses, branch codes, historical addresses.
 
-**Step D: Objective A (The Address Truth Flag)**
-The app looks at the thickest, most tangled cluster of strings to find the **Top Ranked PIN**. 
-Then, it compares it to what the customer told us (the Declared PIN):
-*   **GREEN (Match):** The network says they live in 560001, and the customer *declared* 560001. They are telling the truth!
-*   **AMBER (Partial):** The network says they live in 560003, but they declared 560001. Both are in Bengaluru. They probably just moved down the street. Medium risk.
+**Step 4: Signals Derived**
+Loc-IQ converts the raw data into mathematical "signals". Here, it applies weights. For example, a proxy IP gets down-weighted (trust factor 0.1), while a recent credit bureau address gets a high weight.
+
+**Step 5: Locations Pinpointed**
+The signals vote on candidate locations. Thick lines point to the most probable pincodes.
+
+**Step 6: Confidence Scored**
+The math finishes. The engine aggregates all the weights and assigns a confidence score out of 100 to the candidate locations.
+
+**Step 7: Truth Flag Issued**
+The app compares the winning location to what the customer originally declared:
+*   **GREEN (Match):** The network says they live in 560001, and the customer *declared* 560001. Truth!
+*   **AMBER (Partial):** The network says they live in 560003, but they declared 560001. Medium risk.
 *   **RED (Severe):** The network says they are in Frankfurt using a VPN, but they declared Delhi. High risk! Fraud alert!
 
-**Step E: The Output Renders**
-The math finishes. The pulsing stops. The beautiful web visualizer draws itself in the center, and the ranked answers populate the right-side Leaderboard.
-
 ---
 
-## 4. The Graph Database Engine (Explained for a 5-year-old)
+## 4. The Demo Scenarios Explained
 
-You hear the words "Graph Database" or "Graph Architecture" a lot. It sounds like a terrifying calculus problem. It isn't.
-
-Think of a Graph Database exactly like a detective's corkboard covered in photos and red strings.
-
-*   **What is a Node?**
-    A Node is just a photo pinned to the corkboard. It can be a photo of a person (a PAN card), or a photo of a place (a PIN Code). 
-
-*   **What is an Edge?**
-    An Edge is the red string connecting two photos. If the PAN card is connected to a PIN code because we found a utility bill, we tie a red string between them.
-
-*   **How do we calculate the "Confidence Score" out of 100?**
-    Not all red strings are equal. 
-    Imagine tying strings between the photos. A government Aadhaar document gets a very thick, heavy rope (High Trust Weight). A random IP address gets a very thin, fragile thread (Low Trust Weight). 
-    To get a score out of 100, the app simply looks at a PIN Code photo and asks: *"How many thick ropes are pulling towards this photo?"* If a location has a lot of heavy ropes pulling toward it, it gets a 99% score.
-
----
-
-## 5. The Demo Scenarios Explained
-
-To make the app easy to show to your bosses without having to type for five minutes, we added two "Ghost Buttons" at the top left. Clicking them instantly fills the form and tells the backend to trigger two highly specific stories.
+To showcase the true power of Loc-IQ without having to manually type inputs, we built three specific "Trace" scenarios you can load from the Overview tab.
 
 **[LOAD CASE: CLEAN]**
-*   **The Code:** When you click this, the app looks for the PAN `CLEAN1111A`.
-*   **What Happens:** The invisible backend is hardcoded to return perfect, matching evidence. It says the Bureau, the IP, and the Bank branch *all* point to Bengaluru. 
-*   **The Result:** The graph visualizer in the center will form a beautiful, tight, perfect circle. The Leaderboard will rank Bengaluru at 99%. The Inspector will show a happy GREEN Truth Flag because the customer told the truth.
+*   **What Happens:** The backend returns perfect, matching evidence. The Bureau, the IP, and the Bank branch *all* point to Bengaluru. 
+*   **The Result:** The graph forms a tight, confident cluster. The Output ranks Bengaluru at 95% confidence. The Truth Flag is GREEN.
 
 **[LOAD CASE: FRAUD]**
-*   **The Code:** When you click this, the app looks for the PAN `FRAUD9999X`.
-*   **What Happens:** The invisible backend is hardcoded to return a chaotic mess. The customer *claims* to live in Delhi. But the Bureau says Andhra Pradesh. And their internet IP says Frankfurt, Germany, with a known hacker Proxy!
-*   **The Result:** The graph visualizer will draw a huge, messy, scattered web. The Leaderboard will rank a remote village in Andhra Pradesh at the top. The Inspector will throw a massive RED Truth flag, warning the bank not to give this person money.
+*   **What Happens:** The customer *claims* to live in Delhi. But the Bureau says Andhra Pradesh. And their internet IP says Frankfurt, Germany, with a known hacker Proxy!
+*   **The Result:** The graph draws a scattered web. The engine detects the proxy and heavily down-weights Frankfurt. The Output ranks Andhra Pradesh as the true location. The Truth Flag is a massive RED.
+
+**[LOAD CASE: MAXIMUM DATA]**
+*   **What Happens:** This is the ultimate stress test. It hits almost every API in the universe (MCA, GSTIN, Vahan, FASTag, Telecom, etc.) pulling back 30 data fields and 15 derived signals.
+*   **The Result:** You will see the Graph Engine light up like a massive constellation, demonstrating how Loc-IQ scales flawlessly to handle massive, complex B2B or entity-level investigations. 
 
 ---
 
@@ -119,22 +106,19 @@ For developers, engineers, or technical architects reviewing this codebase, the 
 
 **1. Tech Stack Overview**
 *   **Framework:** Next.js 16 (App Router) + React 19.
-*   **Language:** Strict TypeScript (defining exact schemas from the Excel workbook).
-*   **Styling:** Tailwind CSS (Dark mode, enterprise palettes, custom CSS animations).
-*   **Data Flow:** React Context API (`AppContext.tsx`) orchestrating global state across a 3-column dashboard grid.
+*   **Language:** Strict TypeScript (defining exact schemas from the JSON data).
+*   **Styling:** Tailwind CSS (Dark mode, enterprise palettes, custom UI components via shadcn/ui).
+*   **Data Flow:** React Context API (`AppContext.tsx`) orchestrating global state.
 
-**2. The Graph Engine (`src/lib/graphEngine.ts`)**
-*   Rather than relying on a heavy third-party graph database (like Neo4j) for a prototype, we engineered an **In-Memory Adjacency List**.
-*   The `buildGraph` method instantiates a structured graph of `GraphNode` and `GraphEdge` arrays.
-*   The math engine uses a weighted sum algorithm to parse `EnrichmentPayload`. It iterates over the edges pointing to `LOCATION` nodes, aggregating the `weight` values. It then normalizes these sums to a `0-100` float, representing the final `confidence_score` inside the `calculateLocationProbability` method.
+**2. The Graph Engine (`src/components/GraphVisualizer.tsx`)**
+*   We utilized **@xyflow/react** (React Flow) to construct a massive directed acyclic graph (DAG) representing the full 170-node API universe. 
+*   **Layered Layout Engine:** Nodes are procedurally plotted into 6 distinct X-axis layers (Identifiers → APIs → Fields → Derived → Locations → Output). 
+*   **State Machine Animation:** A `playbackStep` integer state drives CSS opacity transitions and edge coloring to simulate data flow over time, creating a cinematic storytelling experience without heavy video assets.
 
-**3. The Visualizer (`src/components/GraphVisualizer.tsx`)**
-*   To avoid Server-Side Rendering (SSR) hydration errors and massive dependency bloat from libraries like D3.js, the graph visualizer uses **Native React SVG Rendering**.
-*   **Concentric Math Logic:** Identifiers are mathematically locked inside a 100px radius inner ring using `Math.cos` and `Math.sin` trigonometry. Locations are plotted on a 240px outer ring. 
-*   **Hardware Acceleration:** SVG styling utilizes native `transform-gpu` and calculated `strokeWidth` bindings tied directly to the edge weights, guaranteeing 60fps animations.
+**3. The Math Model (`src/data/data_demo_cases.json`)**
+*   The actual probability mechanics use a weighted sum algorithm: `effective_weight = base_weight * recency_factor * ip_trust_factor`.
+*   Proxy and VPN IPs automatically trigger a massive penalty (`ip_trust_factor: 0.1`) which structurally prevents fraudulent international IP addresses from outweighing physical domestic evidence (like a FASTag toll ping).
 
-**4. The Objective A Flag (`address_truth_flag`)**
-*   The logic runs entirely inside the Engine layer rather than the UI layer. During the `calculateLocationProbability` loop, the engine intercepts the `declared_pincode` string.
-*   It performs a strict equality check for `GREEN` status.
-*   It performs a `substring(0, 3)` proximity check for `AMBER` status.
-*   It evaluates boolean flags like `is_proxy` directly from the `ip_geolocation` mock API endpoint to throw a `RED` status.
+**4. The Objective A Flag (`truth_flag`)**
+*   The logic compares the `declared_pincode` string against the `top_candidate` string.
+*   The result acts as the ultimate pass/fail output for the bank's underwriting pipeline.
