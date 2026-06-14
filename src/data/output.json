@@ -1,0 +1,44 @@
+[
+  {
+    "What the tool returns": "candidate_rank",
+    "Plain meaning": "The position in the shortlist — candidate 1 is the single most likely place, candidate 2 the next, and so on. The tool never gives just one answer; it gives an ordered list to try.",
+    "Example value": "1",
+    "Why it's the output we want": "A ranked list is actionable: you work down it, best lead first."
+  },
+  {
+    "What the tool returns": "candidate_pincode",
+    "Plain meaning": "The 6-digit PIN-code of this candidate location. A PIN is a small area (often a few streets to a neighbourhood), so this is precise, not a vague region.",
+    "Example value": "560037",
+    "Why it's the output we want": "Precise enough for a field agent to actually go there."
+  },
+  {
+    "What the tool returns": "candidate_lat_lon",
+    "Plain meaning": "The exact map coordinates (latitude, longitude) for the centre of that candidate location — what you'd drop a pin on in Google Maps.",
+    "Example value": "12.9719, 77.6412",
+    "Why it's the output we want": "Maximal precision: a point on the map, not a state."
+  },
+  {
+    "What the tool returns": "confidence",
+    "Plain meaning": "A 0-to-1 score for how strongly the evidence backs this candidate. 0.80 = strong; 0.30 = weak/uncertain.",
+    "Example value": "0.74",
+    "Why it's the output we want": "Tells you how much to trust each lead before spending effort."
+  },
+  {
+    "What the tool returns": "evidence_summary",
+    "Plain meaning": "Plain text listing WHICH inputs pointed here and how fresh they are — so you can see the 'why' behind the rank.",
+    "Example value": "declared PIN + bureau current address + field visit 12 days ago",
+    "Why it's the output we want": "Trust comes from seeing the reasons, not a black box."
+  },
+  {
+    "What the tool returns": "address_truth_flag (Obj. A)",
+    "Plain meaning": "For application-time: GREEN = declared address looks real & consistent; AMBER = some mismatch; RED = declared address contradicts everything we can see.",
+    "Example value": "AMBER",
+    "Why it's the output we want": "This is Objective A's verdict on the address they gave."
+  },
+  {
+    "What the tool returns": "freshness_date",
+    "Plain meaning": "The date of the most recent piece of evidence behind the top candidate. Old evidence = colder trail.",
+    "Example value": "2026-05-30",
+    "Why it's the output we want": "A 2-week-old lead beats a 2-year-old one."
+  }
+]

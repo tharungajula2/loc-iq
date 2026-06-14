@@ -1,0 +1,68 @@
+[
+  {
+    "id": "mobile_number",
+    "category": "Customer-given identity",
+    "identifier": "mobile_number",
+    "where_it_comes_from": "The customer writes it on the application/contact form. The bank stores it in the customer record.",
+    "what_it_means": "The 10-digit Indian mobile number (begins with 6/7/8/9). It is TWO things at once: (a) a way to identify and reach the person, and (b) a weak location hint, because every number-series was first issued in a telecom 'circle' (a licence region like 'Karnataka' or 'Delhi').",
+    "why_it_matters": "It is the most widely-accepted key in the outside world — caller-ID services, phone-intelligence vendors, and consent flows all take a phone number. It also gives a free, instant (if weak) original-region clue.",
+    "what_it_unlocks": "phonenumbers library (validate + original circle); caller-ID/Truecaller-style name; phone-intelligence vendors (Twilio, DataYuge); the contact point for Account-Aggregator consent. NOTE: a number can NOT give live location, and number portability (people keeping a number when they move/switch operator) makes the original circle stale.",
+    "derived_columns": "mobile_valid_flag = is the number structurally valid? (yes/no).  mobile_prefix_4 = the first 4 digits (the 'series').  phone_original_circle = the telecom circle the series was first issued in (e.g. Karnataka).  phone_original_region = the broad region from that circle (e.g. South).",
+    "example": "9876543210"
+  },
+  {
+    "id": "pan",
+    "category": "Customer-given identity",
+    "identifier": "pan",
+    "where_it_comes_from": "Given by the customer at KYC (mandatory for a loan). Stored in the bank's KYC record.",
+    "what_it_means": "Permanent Account Number — the 10-character income-tax ID, shaped as 5 letters + 4 digits + 1 letter (e.g. ABCDE1234F). It is a strong, unique key for ONE person.",
+    "why_it_matters": "This is THE key that unlocks the credit bureau, and the bureau holds the person's CURRENT and PREVIOUS addresses. For locating someone who has run, past addresses may be where they return — so this is one of the possible inputs.",
+    "what_it_unlocks": "Credit-bureau report (CIBIL / Experian / Equifax / CRIF) pulled by the lender — returns address history, phone history, employment, and which lenders enquired from where. Also used to de-duplicate (spot the same person across applications).",
+    "derived_columns": "bureau_current_state = state of the address the bureau currently lists.  bureau_prev_state_count = how many different states appear in past addresses (high = moves a lot).  address_stability_score = 0-1 score of how settled they are (one long-held address = high; many short ones = low).",
+    "example": "ABCDE1234F"
+  },
+  {
+    "id": "aadhaar_number",
+    "category": "Customer-given identity",
+    "identifier": "aadhaar_number",
+    "where_it_comes_from": "Collected at KYC / given by the customer. Held inside KYC (usually masked).",
+    "what_it_means": "The 12-digit national identity number. It is the strongest unique person-key in India and is tied to a verified KYC address.",
+    "why_it_matters": "As an internal identity key it is excellent for de-duplication — catching the same human applying under slightly different names, phones, or addresses — and it links to a KYC address.",
+    "what_it_unlocks": "Internal identity match / de-duplication; KYC address retrieval; linkage into the CKYC registry. It is NOT a public-API location source by itself.",
+    "derived_columns": "identity_dedupe_id = one internal ID that links all records that are really the same person.  kyc_address_state = the state on the verified KYC address.",
+    "example": "12-digit number (kept masked)"
+  },
+  {
+    "id": "email_id",
+    "category": "Customer-given identity",
+    "identifier": "email_id",
+    "where_it_comes_from": "Given by the customer on the application/contact form.",
+    "what_it_means": "The customer's email address. On its own it carries almost no geography (an @gmail.com tells you nothing about where they live).",
+    "why_it_matters": "It is mainly an IDENTITY/linkage key, not a location key. Its real use is spotting the same email reused across many applications (a fraud-ring tell) and feeding people-data enrichment services that accept an email.",
+    "what_it_unlocks": "People-data enrichment (PeopleDataLabs, Clearbit, FullContact); email-footprint tools (Hunter.io, HaveIBeenPwned); account linkage. Rarely returns real location.",
+    "derived_columns": "email_domain = the part after @ (gmail.com, company.com).  email_reuse_count = how many different applications used this exact email (high = possible fraud ring).",
+    "example": "user@gmail.com"
+  },
+  {
+    "id": "customer_key",
+    "category": "System identity",
+    "identifier": "customer_key",
+    "where_it_comes_from": "The bank's customer-master database, usually as a hashed/tokenised version of the real customer ID.",
+    "what_it_means": "A unique code that stands for ONE PERSON across all their cases (one person can have many loans/logins, but a single customer_key). 'Hashed/tokenised' means the real ID is replaced by a scrambled code that still works as a label but can't be read back into a name.",
+    "why_it_matters": "It lets you gather EVERY event for the same person — five logins, two loans, three repayments — under one identity, so you see their full pattern, WITHOUT ever touching their name or Aadhaar.",
+    "what_it_unlocks": "Pulls all of that person's events/history from the bank's own systems (it is the master 'show me everything about this person' key). It is an internal join key, not an external API.",
+    "derived_columns": "customer_event_count = how many recorded events this person has.  distinct_states_seen = how many different states appear across all their signals.  latest_signal_date = date of their most recent signal (freshness).",
+    "example": "CUST_HASH_9F21"
+  },
+  {
+    "id": "case_id",
+    "category": "System identity",
+    "identifier": "case_id",
+    "where_it_comes_from": "Created automatically by the bank's loan software — the LOS (Loan Origination System, which processes a new application) or LMS (Loan Management System, which runs the loan afterwards) — or by the collections system when a recovery case opens.",
+    "what_it_means": "A unique code for ONE application / loan / recovery case — like a docket number. It identifies the CASE (the event), not the person. One person can have several case_ids.",
+    "why_it_matters": "It is the thread that ties every fetched value back to the right case. Without it, a fetched IP or address has nowhere to attach. You can also type it in to pull up everything known about that one case.",
+    "what_it_unlocks": "Pulls the full case record from bank systems — declared address, branch, channel, timestamps, and the link to that customer's other cases. Internal join key, no external API.",
+    "derived_columns": "case_signal_count = how many location clues this one case has.  case_age_days = how many days old the case is.",
+    "example": "CASE_000123"
+  }
+]

@@ -1,0 +1,256 @@
+{
+  "scoring": {
+    "formula": "effective_weight = base_weight * recency_factor * ip_trust_factor",
+    "ip_trust_factor": "1.0 normally; 0.1 when the IP is flagged proxy/hosting/foreign (so a VPN location can never become the top candidate)",
+    "confidence": "sum the effective_weight of all signals pointing to each location, then normalise across locations to 0-100",
+    "truth_flag_rules": {
+      "GREEN": "declared PIN exactly equals the top candidate PIN",
+      "AMBER": "declared PIN shares the first 3 digits / same district as the top candidate (probably moved nearby)",
+      "RED": "declared PIN is far from the top candidate, OR a proxy/foreign IP is detected, OR signals strongly conflict"
+    }
+  },
+  "clean": {
+    "case_label": "CLEAN",
+    "summary": "Everything agrees on Bengaluru. Declared address matches the evidence. Truth flag GREEN.",
+    "identifiers": {
+      "mobile_number": "9900112233",
+      "pan": "CLEAN1111A",
+      "aadhaar_number": "111122223333",
+      "email_id": "clean@demo.com",
+      "customer_key": "CUST-CL-01",
+      "case_id": "CASE-2026-001",
+      "declared_pincode": "560001"
+    },
+    "fetched_fields": [
+      {
+        "data_field": "declared_pincode",
+        "value": "560001",
+        "source_api": "Data.gov.in Pincode Directory",
+        "resolves_to": "Bengaluru, Karnataka",
+        "freshness_date": "2026-06-01"
+      },
+      {
+        "data_field": "bureau_address_history",
+        "value": "560001 (current), 560038 (prev 2022)",
+        "source_api": "Credit bureaus: CIBIL / Experian / Equifax / CRIF",
+        "resolves_to": "Bengaluru, Karnataka",
+        "freshness_date": "2026-05-20"
+      },
+      {
+        "data_field": "branch_ifsc",
+        "value": "HDFC0000037",
+        "source_api": "Razorpay IFSC API",
+        "resolves_to": "Bengaluru, Karnataka",
+        "freshness_date": "2026-01-10"
+      },
+      {
+        "data_field": "public_ip",
+        "value": "103.21.244.1",
+        "source_api": "ip-api.com JSON endpoint",
+        "resolves_to": "Bengaluru, Karnataka",
+        "proxy": false,
+        "freshness_date": "2026-06-09"
+      },
+      {
+        "data_field": "mobile_number",
+        "value": "9900112233",
+        "source_api": "Python phonenumbers library",
+        "resolves_to": "Karnataka circle (South)",
+        "freshness_date": "original-issue"
+      }
+    ],
+    "signals": [
+      {
+        "signal": "Bureau current address",
+        "location_id": "560001",
+        "location_label": "Bengaluru 560001",
+        "base_weight": 0.9,
+        "recency_factor": 1.0,
+        "ip_trust_factor": 1.0,
+        "source_api": "Credit bureaus",
+        "evidence": "Bureau lists current address in 560001."
+      },
+      {
+        "signal": "Branch IFSC location",
+        "location_id": "560001",
+        "location_label": "Bengaluru 560001",
+        "base_weight": 0.8,
+        "recency_factor": 0.9,
+        "ip_trust_factor": 1.0,
+        "source_api": "Razorpay IFSC API",
+        "evidence": "Loan branch is in Bengaluru 560001."
+      },
+      {
+        "signal": "IP geolocation",
+        "location_id": "560001",
+        "location_label": "Bengaluru 560001",
+        "base_weight": 0.6,
+        "recency_factor": 1.0,
+        "ip_trust_factor": 1.0,
+        "source_api": "ip-api.com",
+        "evidence": "Login IP resolves to Bengaluru, not a proxy."
+      },
+      {
+        "signal": "Telecom circle",
+        "location_id": "karnataka",
+        "location_label": "Karnataka (region)",
+        "base_weight": 0.4,
+        "recency_factor": 0.7,
+        "ip_trust_factor": 1.0,
+        "source_api": "phonenumbers",
+        "evidence": "Mobile series originally issued in Karnataka."
+      }
+    ],
+    "expected_output": {
+      "ranked": [
+        {
+          "rank": 1,
+          "location": "Bengaluru 560001",
+          "confidence": 95
+        },
+        {
+          "rank": 2,
+          "location": "Karnataka (region)",
+          "confidence": 5
+        }
+      ],
+      "top_candidate": "560001",
+      "declared": "560001",
+      "truth_flag": "GREEN",
+      "reason": "Declared PIN 560001 matches the strongest evidence cluster (bureau + branch + clean IP all in Bengaluru)."
+    }
+  },
+  "fraud": {
+    "case_label": "FRAUD",
+    "summary": "Customer declared Delhi, but the real evidence clusters in Andhra Pradesh. The Frankfurt IP is a VPN/proxy and is heavily down-weighted (it must NOT win). Truth flag RED.",
+    "identifiers": {
+      "mobile_number": "9191919191",
+      "pan": "FRAUD9999X",
+      "aadhaar_number": "999988887777",
+      "email_id": "suspect@anon.to",
+      "customer_key": "CUST-FR-99",
+      "case_id": "CASE-2026-999",
+      "declared_pincode": "110001"
+    },
+    "fetched_fields": [
+      {
+        "data_field": "declared_pincode",
+        "value": "110001",
+        "source_api": "Data.gov.in Pincode Directory",
+        "resolves_to": "New Delhi, Delhi (DECLARED — unverified)",
+        "freshness_date": "2026-06-01"
+      },
+      {
+        "data_field": "bureau_address_history",
+        "value": "515001 (current), 515272 (prev 2023)",
+        "source_api": "Credit bureaus: CIBIL / Experian / Equifax / CRIF",
+        "resolves_to": "Anantapur, Andhra Pradesh",
+        "freshness_date": "2026-04-18"
+      },
+      {
+        "data_field": "public_ip",
+        "value": "185.220.101.5",
+        "source_api": "ip-api.com JSON endpoint",
+        "resolves_to": "Frankfurt, Germany",
+        "proxy": true,
+        "freshness_date": "2026-06-09",
+        "note": "proxy=true, hosting=true -> location DISCARDED from ranking"
+      },
+      {
+        "data_field": "branch_ifsc",
+        "value": "SBIN0000500",
+        "source_api": "Razorpay IFSC API",
+        "resolves_to": "Hyderabad 500001, Telangana",
+        "freshness_date": "2025-11-02"
+      },
+      {
+        "data_field": "mobile_number",
+        "value": "9191919191",
+        "source_api": "Python phonenumbers library",
+        "resolves_to": "Andhra Pradesh circle (South)",
+        "freshness_date": "original-issue"
+      }
+    ],
+    "signals": [
+      {
+        "signal": "Bureau current address",
+        "location_id": "515001",
+        "location_label": "Anantapur 515001 (AP)",
+        "base_weight": 0.9,
+        "recency_factor": 1.0,
+        "ip_trust_factor": 1.0,
+        "source_api": "Credit bureaus",
+        "evidence": "Bureau current address is 515001, Andhra Pradesh."
+      },
+      {
+        "signal": "Bureau previous address",
+        "location_id": "515272",
+        "location_label": "515272 (AP)",
+        "base_weight": 0.7,
+        "recency_factor": 0.8,
+        "ip_trust_factor": 1.0,
+        "source_api": "Credit bureaus",
+        "evidence": "Previous bureau address 515272, also AP — absconders often return here."
+      },
+      {
+        "signal": "Telecom circle",
+        "location_id": "515001",
+        "location_label": "Anantapur 515001 (AP)",
+        "base_weight": 0.4,
+        "recency_factor": 0.7,
+        "ip_trust_factor": 1.0,
+        "source_api": "phonenumbers",
+        "evidence": "Mobile series issued in the Andhra Pradesh circle."
+      },
+      {
+        "signal": "Branch IFSC location",
+        "location_id": "500001",
+        "location_label": "Hyderabad 500001",
+        "base_weight": 0.5,
+        "recency_factor": 0.8,
+        "ip_trust_factor": 1.0,
+        "source_api": "Razorpay IFSC API",
+        "evidence": "Loan branch in Hyderabad 500001 (neighbouring Telangana)."
+      },
+      {
+        "signal": "IP geolocation (PROXY)",
+        "location_id": "frankfurt",
+        "location_label": "Frankfurt, DE (proxy)",
+        "base_weight": 0.95,
+        "recency_factor": 1.0,
+        "ip_trust_factor": 0.1,
+        "source_api": "ip-api.com",
+        "evidence": "IP resolves to Frankfurt but proxy=true -> down-weighted to near-zero. A VPN must never win."
+      }
+    ],
+    "expected_output": {
+      "ranked": [
+        {
+          "rank": 1,
+          "location": "Anantapur 515001 (AP)",
+          "confidence": 49
+        },
+        {
+          "rank": 2,
+          "location": "515272 (AP)",
+          "confidence": 22
+        },
+        {
+          "rank": 3,
+          "location": "Hyderabad 500001",
+          "confidence": 16
+        },
+        {
+          "rank": 4,
+          "location": "Frankfurt, DE (proxy)",
+          "confidence": 4,
+          "note": "proxy — discarded"
+        }
+      ],
+      "top_candidate": "515001",
+      "declared": "110001",
+      "truth_flag": "RED",
+      "reason": "Declared Delhi (110001) contradicts the real evidence cluster in Andhra Pradesh (515001/515272). A foreign proxy IP (Frankfurt) was detected and discarded. High fraud risk."
+    }
+  }
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "Category": "Customer-given identity",
+    "Identifier (the key you type)": "mobile_number",
+    "Where it comes from": "The customer writes it on the application/contact form. The bank stores it in the customer record.",
+    "What it means": "The 10-digit Indian mobile number (begins with 6/7/8/9). It is TWO things at once: (a) a way to identify and reach the person, and (b) a weak location hint, because every number-series was first issued in a telecom 'circle' (a licence region like 'Karnataka' or 'Delhi').",
+    "Why it matters": "It is the most widely-accepted key in the outside world — caller-ID services, phone-intelligence vendors, and consent flows all take a phone number. It also gives a free, instant (if weak) original-region clue.",
+    "What this key unlocks (data + APIs)": "phonenumbers library (validate + original circle); caller-ID/Truecaller-style name; phone-intelligence vendors (Twilio, DataYuge); the contact point for Account-Aggregator consent. NOTE: a number can NOT give live location, and number portability (people keeping a number when they move/switch operator) makes the original circle stale.",
+    "Derived columns later(Examples)": "",
+    "Example": "9876543210"
+  },
+  {
+    "Category": "Customer-given identity",
+    "Identifier (the key you type)": "pan",
+    "Where it comes from": "Given by the customer at KYC (mandatory for a loan). Stored in the bank's KYC record.",
+    "What it means": "Permanent Account Number — the 10-character income-tax ID, shaped as 5 letters + 4 digits + 1 letter (e.g. ABCDE1234F). It is a strong, unique key for ONE person.",
+    "Why it matters": "This is THE key that unlocks the credit bureau, and the bureau holds the person's CURRENT and PREVIOUS addresses. For locating someone who has run, past addresses may be where they return — so this is one of the possible inputs.",
+    "What this key unlocks (data + APIs)": "Credit-bureau report (CIBIL / Experian / Equifax / CRIF) pulled by the lender — returns address history, phone history, employment, and which lenders enquired from where. Also used to de-duplicate (spot the same person across applications).",
+    "Derived columns later(Examples)": "",
+    "Example": "ABCDE1234F"
+  },
+  {
+    "Category": "Customer-given identity",
+    "Identifier (the key you type)": "aadhaar_number",
+    "Where it comes from": "Collected at KYC / given by the customer. Held inside KYC (usually masked).",
+    "What it means": "The 12-digit national identity number. It is the strongest unique person-key in India and is tied to a verified KYC address.",
+    "Why it matters": "As an internal identity key it is excellent for de-duplication — catching the same human applying under slightly different names, phones, or addresses — and it links to a KYC address.",
+    "What this key unlocks (data + APIs)": "Internal identity match / de-duplication; KYC address retrieval; linkage into the CKYC registry. It is NOT a public-API location source by itself.",
+    "Derived columns later(Examples)": "",
+    "Example": "12-digit number (kept masked)"
+  },
+  {
+    "Category": "Customer-given identity",
+    "Identifier (the key you type)": "email_id",
+    "Where it comes from": "Given by the customer on the application/contact form.",
+    "What it means": "The customer's email address. On its own it carries almost no geography (an @gmail.com tells you nothing about where they live).",
+    "Why it matters": "It is mainly an IDENTITY/linkage key, not a location key. Its real use is spotting the same email reused across many applications (a fraud-ring tell) and feeding people-data enrichment services that accept an email.",
+    "What this key unlocks (data + APIs)": "People-data enrichment (PeopleDataLabs, Clearbit, FullContact); email-footprint tools (Hunter.io, HaveIBeenPwned); account linkage. Rarely returns real location.",
+    "Derived columns later(Examples)": "",
+    "Example": "user@gmail.com"
+  },
+  {
+    "Category": "System identity",
+    "Identifier (the key you type)": "customer_key",
+    "Where it comes from": "The bank's customer-master database, usually as a hashed/tokenised version of the real customer ID.",
+    "What it means": "A unique code that stands for ONE PERSON across all their cases (one person can have many loans/logins, but a single customer_key). 'Hashed/tokenised' means the real ID is replaced by a scrambled code that still works as a label but can't be read back into a name.",
+    "Why it matters": "It lets you gather EVERY event for the same person — five logins, two loans, three repayments — under one identity, so you see their full pattern, WITHOUT ever touching their name or Aadhaar.",
+    "What this key unlocks (data + APIs)": "Pulls all of that person's events/history from the bank's own systems (it is the master 'show me everything about this person' key). It is an internal join key, not an external API.",
+    "Derived columns later(Examples)": "",
+    "Example": "CUST_HASH_9F21"
+  },
+  {
+    "Category": "System identity",
+    "Identifier (the key you type)": "case_id",
+    "Where it comes from": "Created automatically by the bank's loan software — the LOS (Loan Origination System, which processes a new application) or LMS (Loan Management System, which runs the loan afterwards) — or by the collections system when a recovery case opens.",
+    "What it means": "A unique code for ONE application / loan / recovery case — like a docket number. It identifies the CASE (the event), not the person. One person can have several case_ids.",
+    "Why it matters": "It is the thread that ties every fetched value back to the right case. Without it, a fetched IP or address has nowhere to attach. You can also type it in to pull up everything known about that one case.",
+    "What this key unlocks (data + APIs)": "Pulls the full case record from bank systems — declared address, branch, channel, timestamps, and the link to that customer's other cases. Internal join key, no external API.",
+    "Derived columns later(Examples)": "",
+    "Example": "CASE_000123"
+  }
+]

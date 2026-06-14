@@ -1,0 +1,462 @@
+[
+  {
+    "id": "data_gov_in_all_india_pincode_directory",
+    "source": "Data.gov.in — All India Pincode Directory",
+    "input_needed": "pincode or full dataset download; free API key for API use",
+    "what_it_returns": "Circle, region, division, office name, PIN code, office type, delivery status, district, state.",
+    "why_it_matters": "Turns a PIN into district/state/region. This is the cleanest public baseline for Indian geography in this project.",
+    "access": "Publicly available (free, API key)",
+    "remarks": "India's official government PIN-code master list. The most trustworthy way to check a PIN is real and to map it to district/state. Download the whole file once and keep it local for instant offline lookups.",
+    "example_link": "https://www.data.gov.in/catalog/all-india-pincode-directory-through-webservice"
+  },
+  {
+    "id": "postalpincode_in_api",
+    "source": "Postalpincode.in API",
+    "input_needed": "6-digit pincode or post office name",
+    "what_it_returns": "Post offices for that PIN, district, state, circle, region, delivery status.",
+    "why_it_matters": "Fast no-key prototype lookup for PIN→district/state. Good for learning and spot checks.",
+    "access": "Publicly available (free)",
+    "remarks": "A quick, no-signup way to turn a PIN into district/state/post-office. It mirrors India Post data, so for anything serious cross-check against the official Data.gov.in file.",
+    "example_link": "https://api.postalpincode.in/pincode/560001"
+  },
+  {
+    "id": "india_post_pin_search_digipin_references",
+    "source": "India Post PIN search / DIGIPIN references",
+    "input_needed": "PIN, post office, or future DIGIPIN if available in bank records",
+    "what_it_returns": "Manual PIN/post-office lookup; future precise grid-style digital addressing where available.",
+    "why_it_matters": "Official manual fallback when APIs disagree or fail. DIGIPIN could become useful later if banks capture it.",
+    "access": "Publicly available (free)",
+    "remarks": "Official India Post PIN search. DIGIPIN is India Post's newer grid-based 'digital PIN' that can pinpoint a small area — worth watching, used only where available.",
+    "example_link": "https://www.indiapost.gov.in/vas/pages/findpincode.aspx"
+  },
+  {
+    "id": "openstreetmap_nominatim",
+    "source": "OpenStreetMap Nominatim",
+    "input_needed": "place text, city/state, PIN, or coordinates",
+    "what_it_returns": "Latitude/longitude and structured place data from OpenStreetMap.",
+    "why_it_matters": "Converts a place/PIN/city into map coordinates for later distance/region work.",
+    "access": "Publicly available (free, fair-use)",
+    "remarks": "Free address->coordinates (and back). Great for demos, but the public server allows only ~1 request/second, needs a real app name in the request, and you must cache results. For volume, self-host or use a paid geocoder.",
+    "example_link": "https://operations.osmfoundation.org/policies/nominatim/"
+  },
+  {
+    "id": "geoapify_geocoding_api",
+    "source": "Geoapify Geocoding API",
+    "input_needed": "place text, address, PIN, API key",
+    "what_it_returns": "Lat/lon, formatted address, state/city/postcode, confidence/rank fields.",
+    "why_it_matters": "More practical than public Nominatim for repeated prototype geocoding.",
+    "access": "Publicly available (free tier + paid)",
+    "remarks": "A friendlier geocoder with a generous free tier and clean structured output. Good middle option between the free public Nominatim and paid Google.",
+    "example_link": "https://www.geoapify.com/geocoding-api/"
+  },
+  {
+    "id": "opencage_geocoding_api",
+    "source": "OpenCage Geocoding API",
+    "input_needed": "place text/address, API key",
+    "what_it_returns": "Lat/lon, formatted address, components, confidence annotations.",
+    "why_it_matters": "Good testing geocoder; useful if Nominatim is too limited.",
+    "access": "Publicly available (free trial + paid)",
+    "remarks": "Geocoder built on open data with worldwide coverage. Free tier is really a trial for testing; ongoing use needs a paid plan.",
+    "example_link": "https://opencagedata.com/api"
+  },
+  {
+    "id": "google_maps_geocoding_api",
+    "source": "Google Maps Geocoding API",
+    "input_needed": "address/place/PIN, API key",
+    "what_it_returns": "High-quality geocoding, place coordinates, formatted address components.",
+    "why_it_matters": "Enterprise-grade geocoding candidate if a bank accepts cost and Google terms.",
+    "access": "Paid",
+    "remarks": "The highest-quality geocoder with excellent India coverage, but it costs money at scale and has usage terms. Use when accuracy really matters; avoid for bulk if budget is tight.",
+    "example_link": "https://developers.google.com/maps/documentation/geocoding"
+  },
+  {
+    "id": "overpass_api",
+    "source": "Overpass API",
+    "input_needed": "area, bounding box, OSM tags such as amenity=bank, highway, railway, bus_station",
+    "what_it_returns": "Roads, towns, banks, ATMs, transport nodes, POI counts from OpenStreetMap.",
+    "why_it_matters": "Builds area context: urban density, transport access, banking/ATM density. This is region context, not person lookup.",
+    "access": "Publicly available (free)",
+    "remarks": "Lets you COUNT map features in an area (banks, ATMs, roads, transport). Gives 'how urban/connected is this area' context — never a person's location. Rate-limited; be gentle.",
+    "example_link": "https://overpass-api.de/"
+  },
+  {
+    "id": "geofabrik_india_osm_extract",
+    "source": "Geofabrik India OSM extract",
+    "input_needed": "downloaded India OSM extract",
+    "what_it_returns": "Bulk offline OSM roads/places/POIs without hitting public APIs.",
+    "why_it_matters": "Best option for serious offline area-context processing once geospatial skills improve.",
+    "access": "Publicly available (free download)",
+    "remarks": "A downloadable copy of all OpenStreetMap data for India. Use it offline so you never hit public rate limits — good once you move past tiny demos.",
+    "example_link": "https://download.geofabrik.de/asia/india.html"
+  },
+  {
+    "id": "datameet_india_maps",
+    "source": "DataMeet India maps",
+    "input_needed": "state/district boundary files",
+    "what_it_returns": "Community-maintained India administrative boundary shapefiles/GeoJSON.",
+    "why_it_matters": "Helps map district/state data and join geospatial data locally.",
+    "access": "Publicly available (free)",
+    "remarks": "Community-maintained India state/district boundary files. Needed to draw maps and to join your data to the right district. Check the licence before any commercial use.",
+    "example_link": "https://github.com/datameet/maps"
+  },
+  {
+    "id": "census_of_india",
+    "source": "Census of India",
+    "input_needed": "state/district/subdistrict tables",
+    "what_it_returns": "Population, urban/rural, demographic district-level context.",
+    "why_it_matters": "Creates regional priors: population weight, urbanity, density. Helps avoid naive “all regions equal” thinking later.",
+    "access": "Publicly available (free)",
+    "remarks": "District-level population and urban/rural figures. Use it to weight areas (busier districts are more likely) so the model doesn't treat every place as equally probable. The latest full census is 2011 — dated but still a useful baseline.",
+    "example_link": "https://censusindia.gov.in/"
+  },
+  {
+    "id": "bhuvan_nrsc_isro_geoportal",
+    "source": "Bhuvan / NRSC / ISRO geoportal",
+    "input_needed": "selected layers/downloads; sometimes registration",
+    "what_it_returns": "Indian map layers, imagery, boundaries, thematic geospatial datasets.",
+    "why_it_matters": "India-specific geospatial reference source for boundaries and area context.",
+    "access": "Publicly available (free, registration)",
+    "remarks": "India's own government map/satellite portal with official boundaries and layers. Can be slow, and some downloads need a free login.",
+    "example_link": "https://bhuvan.nrsc.gov.in/"
+  },
+  {
+    "id": "gadm_india_boundaries",
+    "source": "GADM India boundaries",
+    "input_needed": "country=India boundary download",
+    "what_it_returns": "Administrative boundaries at multiple levels.",
+    "why_it_matters": "Quick boundary source for personal GIS experiments.",
+    "access": "Publicly available (free, licence)",
+    "remarks": "Ready-made administrative boundary shapes for India at several levels (state/district/sub-district). Free, but its licence restricts commercial redistribution — read it first.",
+    "example_link": "https://gadm.org/download_country.html"
+  },
+  {
+    "id": "ip_api_com_json_endpoint",
+    "source": "ip-api.com JSON endpoint",
+    "input_needed": "public_ip",
+    "what_it_returns": "Country, region/state, city, lat/lon, timezone, ISP, organization, ASN, mobile/proxy/hosting flags.",
+    "why_it_matters": "Fast no-key way to turn IP into approximate region and trust flags for demos.",
+    "access": "Publicly available (free, non-commercial)",
+    "remarks": "The easiest no-key way to turn an IP into an approximate city + VPN/proxy/mobile flags. Free tier is HTTP-only, ~45 requests/minute, and non-commercial — fine for learning/prototyping, not production.",
+    "example_link": "https://ip-api.com/docs/api:json"
+  },
+  {
+    "id": "maxmind_geolite2_city",
+    "source": "MaxMind GeoLite2 City",
+    "input_needed": "public_ip looked up in local .mmdb file",
+    "what_it_returns": "Country, subdivision/state, city, postal, lat/lon, accuracy_radius.",
+    "why_it_matters": "Best local/offline IP location option after download. Accuracy radius makes uncertainty visible.",
+    "access": "Publicly available (free account)",
+    "remarks": "A downloadable IP->city database you query offline (no per-call limit). It also gives an 'accuracy radius' so you know how fuzzy each IP guess is. Its licence forbids using it to identify a specific household/individual.",
+    "example_link": "https://dev.maxmind.com/geoip/docs/databases/city-and-country/"
+  },
+  {
+    "id": "ipinfo_lite",
+    "source": "IPinfo Lite",
+    "input_needed": "public_ip + free token",
+    "what_it_returns": "Country, continent, ASN, AS name, AS domain.",
+    "why_it_matters": "Useful for network owner/ASN features and country-level sanity check.",
+    "access": "Publicly available (free token)",
+    "remarks": "Free IP lookup, but the Lite tier only returns country + the network owner (no Indian city/state). Good for a quick country/VPN sanity check; city-level needs the paid tier.",
+    "example_link": "https://ipinfo.io/developers/lite-api"
+  },
+  {
+    "id": "ipinfo_paid_apis",
+    "source": "IPinfo paid APIs",
+    "input_needed": "public_ip + paid token",
+    "what_it_returns": "Detailed geolocation, privacy/VPN, carrier/mobile, company/ASN fields depending plan.",
+    "why_it_matters": "Stronger IP intelligence if bank needs vendor-grade enrichments.",
+    "access": "Publicly available (paid)",
+    "remarks": "The paid IPinfo tiers add city/region plus explicit VPN/proxy/Tor flags and carrier/company data — a sharper second opinion when IP trust matters.",
+    "example_link": "https://ipinfo.io/developers"
+  },
+  {
+    "id": "db_ip_lite",
+    "source": "DB-IP Lite",
+    "input_needed": "public_ip or local IP range join",
+    "what_it_returns": "IP range to country/region/city/lat/lon depending edition.",
+    "why_it_matters": "Alternative local IP geolocation DB if MaxMind is not used.",
+    "access": "Publicly available (free)",
+    "remarks": "A free downloadable IP-to-location database, similar idea to MaxMind GeoLite2. Handy as a cross-check or backup. Fields depend on the edition you download.",
+    "example_link": "https://db-ip.com/db/download/ip-to-city-lite"
+  },
+  {
+    "id": "ip2location_lite",
+    "source": "IP2Location LITE",
+    "input_needed": "public_ip or local IP range join",
+    "what_it_returns": "IP range to country/region/city/lat/lon depending selected DB package.",
+    "why_it_matters": "Alternative downloadable IP geolocation database.",
+    "access": "Publicly available (free)",
+    "remarks": "Another free offline IP-to-location database. Useful to compare against MaxMind/DB-IP — if two databases disagree a lot, trust the IP less.",
+    "example_link": "https://lite.ip2location.com/"
+  },
+  {
+    "id": "ip2proxy_lite",
+    "source": "IP2Proxy LITE",
+    "input_needed": "public_ip or local IP range join",
+    "what_it_returns": "Proxy/VPN/datacenter type flags depending edition.",
+    "why_it_matters": "Does not give location; tells whether IP location should be trusted less.",
+    "access": "Publicly available (free)",
+    "remarks": "A companion database that flags whether an IP is a known proxy/VPN/datacentre. Use it to DOWN-WEIGHT an IP's location, not to locate anyone.",
+    "example_link": "https://lite.ip2location.com/database/ip2proxy"
+  },
+  {
+    "id": "abuseipdb",
+    "source": "AbuseIPDB",
+    "input_needed": "public_ip + API key",
+    "what_it_returns": "Abuse confidence score, report categories, report history.",
+    "why_it_matters": "Flags dirty infrastructure that can weaken IP trust.",
+    "access": "Publicly available (free tier + paid)",
+    "remarks": "A community database of IP 'abuse' reports. Tells you if an IP is widely flagged as malicious — a trust signal about the connection, not a location.",
+    "example_link": "https://www.abuseipdb.com/api"
+  },
+  {
+    "id": "python_phonenumbers_library",
+    "source": "Python phonenumbers library",
+    "input_needed": "mobile_number",
+    "what_it_returns": "Parse/validate/format number, country code, possible number type; sometimes carrier metadata via libphonenumber metadata.",
+    "why_it_matters": "Cleans phone numbers before any telecom-circle or vendor lookup.",
+    "access": "Publicly available (free library)",
+    "remarks": "Google's offline number library. It validates an Indian number, says its type, and (via its carrier add-on) hints the original operator. It gives NO live location — only structure.",
+    "example_link": "https://pypi.org/project/phonenumbers/"
+  },
+  {
+    "id": "dot_msc_telecom_number_series_references",
+    "source": "DoT / MSC / telecom number-series references",
+    "input_needed": "mobile prefix / first 4–5 digits",
+    "what_it_returns": "Original operator/service area/circle where number series was allocated, if table is available.",
+    "why_it_matters": "Weak historical region hint from number series. Useful only as tie-breaker.",
+    "access": "Publicly available (free / manual)",
+    "remarks": "Public references for which operator/circle a number-series was originally issued in. Treat as a weak region hint only — number portability and relocation make it stale.",
+    "example_link": "https://dot.gov.in/"
+  },
+  {
+    "id": "mobile_intelligence_apis_datayuge_twilio_lookup_abstract_numverify",
+    "source": "Mobile intelligence APIs: DataYuge / Twilio Lookup / Abstract / Numverify",
+    "input_needed": "mobile_number + API key",
+    "what_it_returns": "Validation, carrier, line type, risk/identity signals, maybe coarse location depending vendor/plan.",
+    "why_it_matters": "Possible phone metadata enrichment if bank approves a vendor.",
+    "access": "Paid (some free tiers)",
+    "remarks": "Vendor APIs that validate a number and return operator/circle, line type, and risk/identity signals. DataYuge is India-focused (operator+circle+MNP); Twilio/Abstract/Numverify are global. None give live physical location.",
+    "example_link": "https://www.twilio.com/docs/lookup"
+  },
+  {
+    "id": "razorpay_ifsc_api",
+    "source": "Razorpay IFSC API",
+    "input_needed": "branch_ifsc",
+    "what_it_returns": "Bank, branch, address, city, district, state, MICR if available.",
+    "why_it_matters": "Turns IFSC into branch geography. Useful if loan source/disbursement branch is known.",
+    "access": "Publicly available (free)",
+    "remarks": "Free, no-key lookup that turns a branch's IFSC code into the bank, branch, city, district and state. Community data (not RBI-official), so cross-check for production; returns 404 if the IFSC is wrong.",
+    "example_link": "https://ifsc.razorpay.com/HDFC0000001"
+  },
+  {
+    "id": "rbi_ifsc_micr_search",
+    "source": "RBI IFSC/MICR search",
+    "input_needed": "IFSC/MICR/bank/branch details",
+    "what_it_returns": "Official branch/IFSC/MICR lookup output.",
+    "why_it_matters": "Official reference for branch geography validation.",
+    "access": "Publicly available (free)",
+    "remarks": "The official RBI page to confirm a branch's IFSC/MICR. Authoritative but manual (no clean bulk API) — use it to verify, not to fetch in volume.",
+    "example_link": "https://www.rbi.org.in/Scripts/IFSCMICRDetails.aspx"
+  },
+  {
+    "id": "browser_geolocation_api",
+    "source": "Browser Geolocation API",
+    "input_needed": "user permission in browser/app; secure HTTPS context",
+    "what_it_returns": "Latitude/longitude/accuracy from device/browser where user allows it.",
+    "why_it_matters": "Potential consented signal during digital journeys.",
+    "access": "Consent-based (free, browser/app)",
+    "remarks": "Built into browsers/apps: if the user taps 'Allow', it returns their device's lat/long + accuracy. It is consent-based and device-side — not something you can call from a phone number.",
+    "example_link": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API"
+  },
+  {
+    "id": "google_geolocation_api_using_wi_fi_cell_data",
+    "source": "Google Geolocation API using Wi-Fi/cell data",
+    "input_needed": "device-side Wi-Fi access points/cell tower observations + API key",
+    "what_it_returns": "Estimated lat/lon and accuracy radius from cell/Wi-Fi signals.",
+    "why_it_matters": "Can locate a device when GPS is weak, but only from consented device-side observations.",
+    "access": "Paid (consent / device-side)",
+    "remarks": "Turns nearby Wi-Fi/cell-tower observations THE DEVICE reports into a position. It needs the device to send those observations — a number alone can never trigger it. Paid.",
+    "example_link": "https://developers.google.com/maps/documentation/geolocation/overview"
+  },
+  {
+    "id": "device_intelligence_vendors_seon_signzy_fingerprintjs",
+    "source": "Device intelligence vendors: SEON / Signzy / FingerprintJS",
+    "input_needed": null,
+    "what_it_returns": null,
+    "why_it_matters": null,
+    "access": "Paid",
+    "remarks": "Vendors that score device/email/phone risk and build a stable device ID across sessions. SEON and FingerprintJS are global; Signzy is India-based. Strengthens the 'same device behind many applicants' (fraud-ring) detection.",
+    "example_link": null
+  },
+  {
+    "id": "credit_bureaus_cibil_experian_equifax_crif",
+    "source": "Credit bureaus: CIBIL / Experian / Equifax / CRIF",
+    "input_needed": "PAN/customer identifiers + consent/permissible purpose/member access",
+    "what_it_returns": "Credit report personal section, historical addresses/phones/employment, enquiry history depending bureau/product.",
+    "why_it_matters": "One of the richest regulated historical-address sources for lenders.",
+    "access": "Regulated access (lender + consent)",
+    "remarks": "India's four RBI-licensed credit bureaus. A lender pulls a report on its OWN applicant using PAN. The report's personal section carries CURRENT and PREVIOUS addresses + phones — one of the richest location sources there is.",
+    "example_link": "Bureau B2B/member systems"
+  },
+  {
+    "id": "ckyc_registry_cersai",
+    "source": "CKYC Registry / CERSAI",
+    "input_needed": "CKYC ID or permitted identity search via institution",
+    "what_it_returns": "KYC address and KYC update information available through governed access.",
+    "why_it_matters": "Independent KYC-address history/reference under regulated institutional access.",
+    "access": "Regulated access",
+    "remarks": "The central government KYC registry (run by CERSAI) where KYC, including address, is stored once and reused. Gives an independent, official address to cross-check the declared one. Access is governed.",
+    "example_link": "https://www.ckycindia.in/ckyc/"
+  },
+  {
+    "id": "account_aggregator_ecosystem",
+    "source": "Account Aggregator ecosystem",
+    "input_needed": "customer consent token via licensed AA/FIU workflow",
+    "what_it_returns": "Bank statement data, transaction narrations, salary credits, balances depending consent artefact.",
+    "why_it_matters": "Can reveal fresh financial behaviour and sometimes merchant/employer geography from transaction text.",
+    "access": "Consent-based (regulated)",
+    "remarks": "An RBI-regulated 'consent pipe' (via licensed AAs like Finvu, OneMoney, Anumati) that lets a customer share bank-statement data. Transactions reveal where money moves NOW and the salary employer — a fresh, clean, consented location signal.",
+    "example_link": "https://sahamati.org.in/"
+  },
+  {
+    "id": "ecourts_legal_case_records",
+    "source": "eCourts / legal case records",
+    "input_needed": "case number or lawful case-linked search",
+    "what_it_returns": "Case metadata and party details where publicly shown.",
+    "why_it_matters": "Can support recovery/legal context if case-linked, not a general locator.",
+    "access": "Publicly available (free)",
+    "remarks": "India's public court-records portal. Occasionally surfaces a known address from a person's litigation history. Public, but coarse and to be used carefully and respectfully.",
+    "example_link": "https://ecourts.gov.in/"
+  },
+  {
+    "id": "delivery_e_commerce_pin_patterns",
+    "source": "Delivery / e-commerce PIN patterns",
+    "input_needed": "customer consent or partnership identifiers",
+    "what_it_returns": "Delivery PINs/addresses, successful delivery areas, return locations depending partner data.",
+    "why_it_matters": "Where parcels are actually received can be a strong residence/operations hint.",
+    "access": "Consent-based / partnership",
+    "remarks": "Where a person actually receives parcels — a strong 'where they live/operate' signal. Not public; available only through a platform partnership or the customer's consent.",
+    "example_link": "Platform partnership/API"
+  },
+  {
+    "id": "people_data_enrichment_peopledatalabs_pipl_clearbit_fullcontact",
+    "source": "People-data enrichment: PeopleDataLabs / Pipl / Clearbit / FullContact",
+    "input_needed": "email, phone, name, domain, or profile URL",
+    "what_it_returns": "Merged public/commercial profile data: location, employer, social handles depending vendor.",
+    "why_it_matters": "Possibility-map only; can add employer/city hints but quality/provenance varies.",
+    "access": "Paid",
+    "remarks": "Vendors that take an email/phone/name and return a merged profile (location, employer, social links). Coverage and accuracy vary, so treat results as a lead, not proof. (Clearbit is now part of HubSpot.)",
+    "example_link": "Vendor API docs"
+  },
+  {
+    "id": "caller_id_name_databases_truecaller_style",
+    "source": "Caller-ID / name databases: Truecaller-style",
+    "input_needed": "mobile_number via vendor/API where available",
+    "what_it_returns": "Crowd-sourced name tags, spam flags, sometimes coarse location text.",
+    "why_it_matters": "Possible supporting identity/contact hint, not truth.",
+    "access": "Paid / ToS",
+    "remarks": "Crowd-sourced services (Truecaller is huge in India) that map a number to a name + spam flag and sometimes a coarse city. A supporting identity/location hint, not proof; bound by their terms.",
+    "example_link": "Vendor API/partner route"
+  },
+  {
+    "id": "hunter_io_hibp_holehe_style_email_footprint_tools",
+    "source": "Hunter.io / HIBP / Holehe-style email footprint tools",
+    "input_needed": "email_id / username",
+    "what_it_returns": "Domain/account footprint or breach exposure depending tool.",
+    "why_it_matters": "Mostly identity/footprint, not location. Included only to avoid forgetting the category.",
+    "access": "Publicly available (free / freemium)",
+    "remarks": "Tools that show where an email is registered online and whether it appeared in breaches. This is about identity/footprint, NOT location — linked accounts only occasionally hint at a city.",
+    "example_link": "https://haveibeenpwned.com/API/v3"
+  },
+  {
+    "id": "aggregate_public_social_activity_by_area",
+    "source": "Aggregate public social activity by area",
+    "input_needed": "city/district/hashtag/place query; platform API where allowed",
+    "what_it_returns": "Area-level post counts or geotagged activity density, not person-level records.",
+    "why_it_matters": "Regional context only: helps understand active areas, not where a customer is.",
+    "access": "Catalogue only",
+    "remarks": "Area-level public post/check-in density (never a named person). Listed for completeness; not a practical signal for this build.",
+    "example_link": "https://docs.x.com/x-api"
+  },
+  {
+    "id": "consented_social_login_profile",
+    "source": "Consented social login profile",
+    "input_needed": "user-authenticated login and granted profile scope",
+    "what_it_returns": "Self-declared profile location/employer if platform allows and user consents.",
+    "why_it_matters": "Optional low-priority corroboration when customer explicitly provides it.",
+    "access": "Consent-based",
+    "remarks": "If a user logs in and grants access, a platform can share their self-declared city/employer. Weak and only with genuine consent; kept as a possibility.",
+    "example_link": "https://learn.microsoft.com/en-us/linkedin/shared/integrations/people/profile-api"
+  },
+  {
+    "id": "public_profile_self_declared_location_text",
+    "source": "Public profile self-declared location text",
+    "input_needed": "profile URL or public handle",
+    "what_it_returns": "Bio/profile city text such as “Bengaluru” or employer/location.",
+    "why_it_matters": "Only a weak lead; may corroborate business/professional info if lawfully used.",
+    "access": "Catalogue only",
+    "remarks": "A city someone writes on a public profile. Weak and risky for a private individual; listed only so the catalogue is complete.",
+    "example_link": "Platform-specific profile pages"
+  },
+  {
+    "id": "leaked_breached_data_dumps",
+    "source": "Leaked / breached data dumps",
+    "input_needed": "stolen personal data",
+    "what_it_returns": "Unknown stolen records.",
+    "why_it_matters": "No legitimate use. Listed only so I remember to reject it.",
+    "access": "Catalogue only",
+    "remarks": "Stolen records of unknown accuracy that circulate online. Catalogued so it's on the map; not a real, stable, or safe source — and very different from the bank's own dormant-account flags.",
+    "example_link": "No link"
+  },
+  {
+    "id": "live_phone_tracking_cdr_tower_location_from_mobile_number",
+    "source": "Live phone tracking / CDR / tower location from mobile number",
+    "input_needed": "mobile_number",
+    "what_it_returns": "Would imply live/current network location if obtained by authorized agencies only.",
+    "why_it_matters": "Not part of this project.",
+    "access": "Catalogue only",
+    "remarks": "There is no public way to get a phone's live tower/network location from just the number; any site claiming this is false/unsafe. CDRs are held by telcos and released only by legal process. Catalogued for awareness.",
+    "example_link": "No public source"
+  },
+  {
+    "id": "voter_roll_covert_tracing",
+    "source": "Voter-roll covert tracing",
+    "input_needed": "name / EPIC / electoral search fields",
+    "what_it_returns": "Potential electoral registration details.",
+    "why_it_matters": "Not suitable for bank location-probability work.",
+    "access": "Catalogue only",
+    "remarks": "Electoral rolls exist publicly, but repurposing them to trace a person is not a sound source for this work. Catalogued only.",
+    "example_link": "No link"
+  },
+  {
+    "id": "fake_accounts_social_scraping_friend_graph_tracking",
+    "source": "Fake accounts / social scraping / friend graph tracking",
+    "input_needed": "name, phone, email, social handles",
+    "what_it_returns": "Private/profile/network data collected through deception or scraping.",
+    "why_it_matters": "Not legitimate.",
+    "access": "Catalogue only",
+    "remarks": "Collecting someone's profile/network through fake accounts or scraping. Listed for completeness; not part of the build.",
+    "example_link": "No link"
+  },
+  {
+    "id": "data_broker_dumps_shady_people_search_osint",
+    "source": "Data broker dumps / shady people-search OSINT",
+    "input_needed": "phone, email, name",
+    "what_it_returns": "Opaque personal profiles, addresses, relatives, social handles.",
+    "why_it_matters": "Not bank-safe.",
+    "access": "Catalogue only",
+    "remarks": "Opaque people-search dumps of unknown provenance. Catalogued for awareness; not a reliable source.",
+    "example_link": "No link"
+  },
+  {
+    "id": "face_recognition_from_public_photos",
+    "source": "Face recognition from public photos",
+    "input_needed": "photo / social profile images",
+    "what_it_returns": "Identity/location inference from images.",
+    "why_it_matters": "Not part of project.",
+    "access": "Catalogue only",
+    "remarks": "Inferring identity/location from photos. Listed for completeness; out of scope for this build.",
+    "example_link": "No link"
+  }
+]
