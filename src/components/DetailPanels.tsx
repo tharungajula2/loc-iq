@@ -84,7 +84,7 @@ export const renderPrimaryIdentifierDetail = (item: any, isTrace: boolean) => {
       <div className="mt-8 pt-6 border-t">
         <h4 className="text-sm font-bold text-primary mb-3 uppercase tracking-wider flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          Masterclass Deep Dive
+          Forensic Deep Dive
         </h4>
         <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 shadow-inner">
           <MarkdownText text={deepDiveText} />
@@ -96,28 +96,27 @@ export const renderPrimaryIdentifierDetail = (item: any, isTrace: boolean) => {
 };
 
 export const renderDataFieldDetail = (item: any, isTrace: boolean) => {
-  // If it's in trace mode, it might have 'value' and 'resolves_to' properties (from FetchedFieldTrace)
-  // We need to fetch the original catalogue item to show the full explanation.
-  const catalogueItem = isTrace ? item._catalogueRef : item;
-  const targetKey = catalogueItem?.data_field || item.data_field;
+  const catalogueItem = item._catalogueRef || item;
+  const traceItem = item._catalogueRef ? item : (isTrace && item.value ? item : null);
+  const targetKey = catalogueItem?.data_field;
   const deepDiveText = (masterclassData as Record<string, string>)[targetKey];
   
   return (
     <div className="space-y-4">
-      {isTrace && (
+      {traceItem && (
         <Card className="bg-primary/10 border-primary/30 mb-6">
           <CardHeader className="py-3 px-4">
             <CardTitle className="text-sm font-medium text-primary">Trace Data</CardTitle>
           </CardHeader>
           <CardContent className="px-4 pb-4 space-y-2">
-            <div><span className="text-xs text-muted-foreground">Value:</span> <span className="font-mono text-sm block">{item.value}</span></div>
-            <div><span className="text-xs text-muted-foreground">Source API:</span> <span className="text-sm block">{item.source_api}</span></div>
-            <div><span className="text-xs text-muted-foreground">Resolves to:</span> <span className="text-sm font-medium block">{item.resolves_to}</span></div>
+            <div><span className="text-xs text-muted-foreground">Value:</span> <span className="font-mono text-sm block">{traceItem.value}</span></div>
+            <div><span className="text-xs text-muted-foreground">Source API:</span> <span className="text-sm block">{traceItem.source_api}</span></div>
+            <div><span className="text-xs text-muted-foreground">Resolves to:</span> <span className="text-sm font-medium block">{traceItem.resolves_to}</span></div>
             <div className="flex gap-4">
-              <div><span className="text-xs text-muted-foreground">Freshness:</span> <Badge variant="secondary" className="ml-2 text-[10px]">{item.freshness_date}</Badge></div>
-              {item.proxy && <Badge variant="destructive" className="text-[10px]">PROXY IP DETECTED</Badge>}
+              <div><span className="text-xs text-muted-foreground">Freshness:</span> <Badge variant="secondary" className="ml-2 text-[10px]">{traceItem.freshness_date}</Badge></div>
+              {traceItem.proxy && <Badge variant="destructive" className="text-[10px]">PROXY IP DETECTED</Badge>}
             </div>
-            {item.note && <div className="text-xs text-destructive mt-2">{item.note}</div>}
+            {traceItem.note && <div className="text-xs text-destructive mt-2">{traceItem.note}</div>}
           </CardContent>
         </Card>
       )}
@@ -173,7 +172,7 @@ export const renderDataFieldDetail = (item: any, isTrace: boolean) => {
             <div className="mt-8 pt-6 border-t">
               <h4 className="text-sm font-bold text-sky-500 mb-3 uppercase tracking-wider flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
-                Masterclass Deep Dive
+                Forensic Deep Dive
               </h4>
               <div className="bg-sky-500/5 border border-sky-500/20 rounded-xl p-4 shadow-inner">
                 <MarkdownText text={deepDiveText} />
@@ -256,7 +255,7 @@ export const renderApiUniverseDetail = (item: any) => {
       <div className="mt-8 pt-6 border-t">
         <h4 className="text-sm font-bold text-blue-500 mb-3 uppercase tracking-wider flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-          Masterclass Deep Dive
+          Forensic Deep Dive
         </h4>
         <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-4 shadow-inner">
           <MarkdownText text={deepDiveText} />
@@ -268,59 +267,76 @@ export const renderApiUniverseDetail = (item: any) => {
 };
 
 export const renderDerivedColumnDetail = (item: any, isTrace: boolean) => {
+  const catalogueItem = item._catalogueRef || item;
+  const traceItem = item._catalogueRef ? item : (isTrace && item.evidence ? item : null);
+  const targetKey = catalogueItem?.derived_variable;
+  const deepDiveText = (masterclassData as Record<string, string>)[targetKey];
+
   return (
     <div className="space-y-4">
-      {isTrace && (
+      {traceItem && (
         <Card className="bg-emerald-500/10 border-emerald-500/30 mb-6">
           <CardHeader className="py-3 px-4">
             <CardTitle className="text-sm font-medium text-emerald-500">Computed Signal</CardTitle>
           </CardHeader>
           <CardContent className="px-4 pb-4 space-y-2">
-            <div><span className="text-xs text-muted-foreground">Location:</span> <span className="font-mono text-sm block">{item.location_label}</span></div>
+            <div><span className="text-xs text-muted-foreground">Location:</span> <span className="font-mono text-sm block">{traceItem.location_label}</span></div>
             <div className="grid grid-cols-3 gap-2 mt-2">
               <div className="bg-background p-2 rounded text-center">
                 <div className="text-[10px] text-muted-foreground">Base Wt</div>
-                <div className="font-bold">{item.base_weight}</div>
+                <div className="font-bold">{traceItem.base_weight}</div>
               </div>
               <div className="bg-background p-2 rounded text-center">
                 <div className="text-[10px] text-muted-foreground">Recency</div>
-                <div className="font-bold">{item.recency_factor}</div>
+                <div className="font-bold">{traceItem.recency_factor}</div>
               </div>
               <div className="bg-background p-2 rounded text-center">
                 <div className="text-[10px] text-muted-foreground">IP Trust</div>
-                <div className="font-bold text-amber-500">{item.ip_trust_factor}</div>
+                <div className="font-bold text-amber-500">{traceItem.ip_trust_factor}</div>
               </div>
             </div>
-            <div className="mt-3"><span className="text-xs text-muted-foreground">Evidence:</span> <span className="text-sm block">{item.evidence}</span></div>
+            <div className="mt-3"><span className="text-xs text-muted-foreground">Evidence:</span> <span className="text-sm block">{traceItem.evidence}</span></div>
           </CardContent>
         </Card>
       )}
 
-      {!isTrace && (
+      {catalogueItem && (
         <>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h4 className="text-sm font-medium text-muted-foreground">Derived Variable</h4>
-              <p className="mt-1 font-medium text-emerald-500">{item.derived_variable}</p>
+              <p className="mt-1 font-medium text-emerald-500">{catalogueItem.derived_variable}</p>
             </div>
             <div>
               <h4 className="text-sm font-medium text-muted-foreground">Parent Data Field</h4>
-              <Badge variant="outline" className="mt-1">{item.parent_field}</Badge>
+              <Badge variant="outline" className="mt-1">{catalogueItem.parent_field}</Badge>
             </div>
           </div>
           
           <div>
             <h4 className="text-sm font-medium text-muted-foreground border-b pb-1 mb-2">Category</h4>
-            <p className="text-sm">{item.category}</p>
+            <p className="text-sm">{catalogueItem.category}</p>
           </div>
 
           <div>
             <h4 className="text-sm font-medium text-muted-foreground border-b pb-1 mb-2">Description / Math</h4>
             <p className="text-sm leading-relaxed p-3 bg-muted rounded-md font-mono text-xs">
-              {item.description}
+              {catalogueItem.description}
             </p>
           </div>
         </>
+      )}
+
+      {deepDiveText && (
+        <div className="mt-8 pt-6 border-t">
+          <h4 className="text-sm font-bold text-emerald-500 mb-3 uppercase tracking-wider flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Forensic Deep Dive
+          </h4>
+          <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4 shadow-inner">
+            <MarkdownText text={deepDiveText} />
+          </div>
+        </div>
       )}
     </div>
   );

@@ -294,7 +294,17 @@ export const GraphVisualizer: React.FC = () => {
         onNodeClick={(_, node) => {
            const data = node.data as any;
            if (data.item) {
-             setSelectedNode({ type: data.type as string, item: data.item, label: data.label as string });
+             let resolvedItem = data.item;
+             if (currentTrace) {
+               if (data.type === 'field') {
+                 const fieldTrace = currentTrace.fetchedFields.find(f => f.data_field === data.item.data_field);
+                 if (fieldTrace) resolvedItem = { ...fieldTrace, _catalogueRef: data.item };
+               } else if (data.type === 'derived') {
+                 const sigTrace = currentTrace.signals.find(s => s.signal === data.item.derived_variable);
+                 if (sigTrace) resolvedItem = { ...sigTrace, _catalogueRef: data.item };
+               }
+             }
+             setSelectedNode({ type: data.type as string, item: resolvedItem, label: data.label as string });
            }
         }}
         fitView
