@@ -66,19 +66,21 @@ export default function Home() {
                 Tracing in progress...
               </Badge>
             ) : currentTrace ? (
-              (() => {
-                const label = currentTrace.case_label.toUpperCase();
-                let colorClass = 'bg-primary/20 text-primary border-primary/30';
-                if (label === 'FRAUD') colorClass = 'bg-destructive/20 text-destructive border-destructive/30';
-                else if (label === 'MAXIMUM') colorClass = 'bg-amber-500/20 text-amber-500 border-amber-500/30';
-                
-                return (
-                  <Badge variant="outline" className={`ml-4 ${colorClass}`}>
-                    <div className={`w-2 h-2 rounded-full mr-2 ${label === 'FRAUD' ? 'bg-destructive' : label === 'MAXIMUM' ? 'bg-amber-500' : 'bg-primary'} animate-pulse`} />
-                    Simulation Ready: {label}
-                  </Badge>
-                );
-              })()
+              <Badge 
+                variant="outline" 
+                className={`ml-4 ${
+                  (currentTrace.case_label || '').toUpperCase() === 'FRAUD' ? 'bg-destructive/20 text-destructive border-destructive/30' :
+                  (currentTrace.case_label || '').toUpperCase() === 'MAXIMUM' ? 'bg-amber-500/20 text-amber-500 border-amber-500/30' :
+                  'bg-primary/20 text-primary border-primary/30'
+                }`}
+              >
+                <div className={`w-2 h-2 rounded-full mr-2 ${
+                  (currentTrace.case_label || '').toUpperCase() === 'FRAUD' ? 'bg-destructive' :
+                  (currentTrace.case_label || '').toUpperCase() === 'MAXIMUM' ? 'bg-amber-500' :
+                  'bg-primary'
+                } animate-pulse`} />
+                Simulation Ready: {(currentTrace.case_label || '').toUpperCase()}
+              </Badge>
             ) : (
               <Badge variant="success" className="animate-in fade-in transition-all px-3 py-1">
                 <span className="mr-2 flex h-2 w-2 rounded-full bg-emerald-500" />
