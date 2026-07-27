@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Loc-IQ",
-  description: "Location Intelligence and Fraud Tracking Prototype",
+  title: "LOC-IQ | Location Probability & Fraud Intelligence Console",
+  description: "Location Probability & Fraud Intelligence Builder Console",
 };
 
 export default function RootLayout({
