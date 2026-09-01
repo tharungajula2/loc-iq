@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
 
 export const InputForm: React.FC = () => {
-  const { inputState, setInputState, loadDemoCase, isAnalyzing } = useAppContext();
+  const { inputState, setInputState, loadDemoCase, runCustomTrace, isAnalyzing } = useAppContext();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,7 +24,7 @@ export const InputForm: React.FC = () => {
     } else if (inputState.pan === 'FRAUD9999X') {
        loadDemoCase('fraud');
     } else {
-       alert("Manual entry without backend logic isn't supported in this demo. Please use the Demo Loaders above.");
+       runCustomTrace(inputState);
     }
   };
 

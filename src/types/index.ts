@@ -70,7 +70,6 @@ export interface DemoCaseDef {
   identifiers: InputState;
   fetched_fields: FetchedFieldTrace[];
   signals: GraphSignalTrace[];
-  expected_output: ExpectedOutputTrace;
 }
 
 // Global State Interfaces

@@ -100,25 +100,7 @@
         "source_api": "phonenumbers",
         "evidence": "Mobile series originally issued in Karnataka."
       }
-    ],
-    "expected_output": {
-      "ranked": [
-        {
-          "rank": 1,
-          "location": "Bengaluru 560001",
-          "confidence": 95
-        },
-        {
-          "rank": 2,
-          "location": "Karnataka (region)",
-          "confidence": 5
-        }
-      ],
-      "top_candidate": "560001",
-      "declared": "560001",
-      "truth_flag": "GREEN",
-      "reason": "Declared PIN 560001 matches the strongest evidence cluster (bureau + branch + clean IP all in Bengaluru)."
-    }
+    ]
   },
   "fraud": {
     "case_label": "FRAUD",
@@ -222,36 +204,7 @@
         "source_api": "ip-api.com",
         "evidence": "IP resolves to Frankfurt but proxy=true -> down-weighted to near-zero. A VPN must never win."
       }
-    ],
-    "expected_output": {
-      "ranked": [
-        {
-          "rank": 1,
-          "location": "Anantapur 515001 (AP)",
-          "confidence": 49
-        },
-        {
-          "rank": 2,
-          "location": "515272 (AP)",
-          "confidence": 22
-        },
-        {
-          "rank": 3,
-          "location": "Hyderabad 500001",
-          "confidence": 16
-        },
-        {
-          "rank": 4,
-          "location": "Frankfurt, DE (proxy)",
-          "confidence": 4,
-          "note": "proxy — discarded"
-        }
-      ],
-      "top_candidate": "515001",
-      "declared": "110001",
-      "truth_flag": "RED",
-      "reason": "Declared Delhi (110001) contradicts the real evidence cluster in Andhra Pradesh (515001/515272). A foreign proxy IP (Frankfurt) was detected and discarded. High fraud risk."
-    }
+    ]
   },
   "maximum": {
     "case_label": "MAXIMUM",
@@ -436,40 +389,6 @@
         "source_api": "Google / Mozilla Geolocation API",
         "evidence": "Wi-Fi scan matches Pune router MACs."
       }
-    ],
-    "expected_output": {
-      "ranked": [
-        {
-          "rank": 1,
-          "location": "Pune 411001 (Actual Operation)",
-          "confidence": 72
-        },
-        {
-          "rank": 2,
-          "location": "Kolkata 700001 (Bureau History)",
-          "confidence": 15
-        },
-        {
-          "rank": 3,
-          "location": "Mumbai 400001 (Declared)",
-          "confidence": 8
-        },
-        {
-          "rank": 4,
-          "location": "Delhi (Mobile Origin)",
-          "confidence": 4
-        },
-        {
-          "rank": 5,
-          "location": "Singapore (VPN Exit)",
-          "confidence": 1,
-          "note": "proxy - discarded"
-        }
-      ],
-      "top_candidate": "411001",
-      "declared": "400001",
-      "truth_flag": "RED",
-      "reason": "Severe mismatch. Declared Mumbai, but live behavioral evidence (UPI, Cash Deposits, Cell Towers, Wi-Fi) overwhelmingly points to Pune, while routing through a Singapore VPN. High-risk fraud ring."
-    }
+    ]
   }
 }
