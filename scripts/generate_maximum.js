@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const fields = require('../src/data/data_fetched_data_fields.json');
 

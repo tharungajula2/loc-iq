@@ -215,7 +215,8 @@
       "aadhaar_number": "999988887777",
       "email_id": "scammer.xyz@proton.me",
       "customer_key": "CUST-HV-1029",
-      "case_id": "CASE-FRAUD-RING-7"
+      "case_id": "CASE-FRAUD-RING-7",
+      "declared_pincode": "400001"
     },
     "fetched_fields": [
       {
