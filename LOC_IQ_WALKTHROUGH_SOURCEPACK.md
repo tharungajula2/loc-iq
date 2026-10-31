@@ -1,5 +1,7 @@
 # LOC-IQ — COMPLETE FORENSIC REVERSE-ENGINEERING SOURCEPACK & PROJECT TRUTH AUDIT
 
+> **Historical audit (September 2026).** This sourcepack references an earlier checkout and commit. For current repository guidance, see the [README](README.md) and [PROJECT_BLUEPRINT](PROJECT_BLUEPRINT.md). The analysis below is preserved as originally written.
+
 > **DOCUMENT STATUS**: STRICT READ-ONLY FORENSIC REVERSE-ENGINEERING REPORT  
 > **TARGET REPOSITORY**: Loc-IQ (`d:\0000_after portfolio_25726\3_loc-iq\loc-iq`)  
 > **COMMIT HASH**: `e597d7b` (`feat: Phase 2 complete — Investigation, Master Data, Intelligence Graph, Network Lab`)  
