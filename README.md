@@ -1,126 +1,50 @@
 # LOC-IQ
 
-A synthetic fraud-intelligence prototype for investigating location evidence in credit workflows.
+**An explainable location-evidence workstation for retail credit and fraud-review scenarios.**
 
-**Live:** [loc-iq.vercel.app](https://loc-iq.vercel.app/)
+LOC-IQ explores a practical question: when an applicant declares a postal PIN, what do several imperfect location signals actually support? The interactive Next.js prototype turns **synthetic** bureau, branch, IP, telecom, and operational observations into a traceable investigation graph, ranks physical-location hypotheses, and explains an address-consistency verdict. It is a portfolio demonstration, **not** a live underwriting or fraud-decision system.
 
----
+**Explore:** [Technical and product blueprint](PROJECT_BLUEPRINT.md) · [Historical forensic sourcepack](LOC_IQ_WALKTHROUGH_SOURCEPACK.md) · [Engine assertions](scripts/test_engine.ts)
 
-## What it is
+## What you can inspect
 
-LOC-IQ demonstrates how an applicant's location can be inferred and verified from digital footprints — bureau address history, IP geolocation, cell tower metadata, UPI merchant patterns and bank IFSC codes — and how much evidential weight each signal actually deserves.
+| Surface | Implemented behavior |
+| --- | --- |
+| Investigation | Switch among three fixture cases or synthesize a new scenario; inspect identifier → provider → observation → signal → candidate → decision provenance, evidence contributions, and the verdict. |
+| Master Data Library | Search and filter a reference catalogue of 6 primary identifier types, 46 prospective data sources, 42 fields, 77 derived-signal definitions, and 102 methodology topics. These are catalogue entries, not connected services. |
+| Intelligence Graph | Explore the catalogue's typed lineage links, provenance labels (`DIRECT`, `NORMALIZED`, `CURATED`), limited-depth views, active-case lens, and shortest paths. |
+| Entity Network Lab | Explore a fixed synthetic multi-case graph, inspect rule findings and supporting edges, and find paths between case entities. |
 
-It is an interactive prototype. There is no live API integration, no production backend, no real customer data, and no machine-learning model. All data is synthetic.
+The three fixture cases illustrate coherent evidence (`clean`), a physical-location conflict with a proxy observation (`fraud`), and a larger multi-source conflict (`maximum`). The custom form offers `baseline`, `proxy_risk`, and `physical_conflict` simulation profiles. The resolver calculates the displayed candidate shares at runtime from fixture or generated signals; it does not look up the entered identifiers. [Case fixtures](src/data/data_demo_cases.json) · [Custom generator and resolver](src/lib/resolver.ts) · [App state](src/context/AppContext.tsx)
 
----
-
-## Four product surfaces
-
-### 1. Investigation Workspace
-
-A single synthetic credit application is investigated through a deterministic runtime provenance graph.
-
+```mermaid
+flowchart LR
+  A[Fixture or synthetic form input] --> B[In-memory resolver]
+  B --> C[Physical candidates and evidence shares]
+  B --> D[Network observations and risk indicators]
+  C --> E[Address consistency: CONSISTENT / REVIEW / CONFLICT]
+  B --> F[Six-layer investigation graph]
 ```
-Identifiers → Evidence Providers → Observations → Derived Signals → Candidate Locations
-```
 
-Each edge carries a computed weight (`base_weight × recency_factor × ip_trust_factor`). The system resolves to ranked physical location hypotheses and an **Address Consistency** verdict: `CONSISTENT`, `CONFLICT`, or `REVIEW REQUIRED`.
+## Evidence, carefully labeled
 
-Three pre-built scenarios demonstrate different outcomes:
+- **Implemented analysis:** `effective weight = base weight × recency factor × IP trust factor`; physical signals are aggregated by location, regional signals can corroborate matching localities, and a largest-remainder allocation makes displayed integer shares total 100% when physical weight exists. The verdict compares the leading physical candidate with the declared PIN. [Resolver](src/lib/resolver.ts)
+- **Illustrative inputs:** All three cases and the multi-case entity network are bundled fixtures. Custom investigations synthesize observations locally from the form's postal PIN and selected profile. Provider names in fixtures indicate *hypothetical provenance*, not completed API requests. [Fixture cases](src/data/data_demo_cases.json) · [Entity fixtures](src/lib/entityNetworkData.ts)
+- **Interpretation limit:** Evidence shares are relative fractions of chosen weights, **not calibrated probabilities**. The weights, thresholds, regional mapping, and network pattern rules are demonstration choices. A proxy flag is a separate observation; it does not by itself turn matching physical evidence into an address conflict. [Resolver](src/lib/resolver.ts) · [Network rules](src/lib/entityNetworkAnalytics.ts)
 
-| Scenario | Declared Location | Top Hypothesis | Address Consistency |
-|---|---|---|---|
-| Coherent Evidence | 560001 (Bengaluru) | 560001 | CONSISTENT |
-| Physical Conflict | 110001 (Delhi) | 515001 (Anantapur) | CONFLICT |
-| Multi-Source | 400001 (Mumbai) | 411001 (Pune) | CONFLICT |
+## Architecture at a glance
 
-### 2. Master Data & Fraud Intelligence Library
+Next.js 16 App Router and React 19 host a client-side TypeScript workstation. React Context holds the current case and logs; React Flow renders the graphs. JSON catalogues and TypeScript fixtures supply the data. There is no application API route, database, authentication, persistent case store, ML model, or live provider integration in this repository. The interface and resolver are implemented, while their data and decisions remain a simulation. [App page](app/page.tsx) · [Context](src/context/AppContext.tsx) · [Package manifest](package.json)
 
-A searchable researched registry of the data landscape:
-
-| Category | Count |
-|---|---|
-| Primary Identifiers | 6 |
-| API / Data Sources | 46 |
-| Fetched Data Fields | 42 |
-| Derived Signals / Variables | 77 |
-| Masterclass Knowledge Sections | 102 |
-
-Each entry includes access classification, permission model, identifier requirements, and methodology notes.
-
-### 3. Intelligence Graph
-
-An interactive lineage graph tracing the **schema architecture** from identifier to derived signal. Exposes:
-
-- `DIRECT`, `NORMALIZED`, and `CURATED` edge provenance
-- progressive node expansion (never loads all 273 nodes by default)
-- Find Path traversal between any two catalogue nodes
-- Active Case Provenance lens — showing only the nodes active in the current investigation
-
-### 4. Synthetic Entity Network Lab
-
-A multi-case entity-linkage workspace across 79 synthetic instance nodes and 61 relationships, demonstrating what becomes visible only when many cases are viewed together.
-
-Findings are **finding-first**: the system surfaces explainable structural patterns before rendering any graph. Verified patterns include:
-
-| Finding | Observed | Classification |
-|---|---|---|
-| Shared Device Across Identities | 4 distinct PERSONs on one device | STRONG_ENTITY_LINK |
-| Reused Contact Attribute | 2 customers sharing mobile / email | STRONG_ENTITY_LINK |
-| Shared Proxy Infrastructure | 4 applications via Frankfurt proxy | CONTEXTUAL_LINK |
-| Address Concentration | 5 applications at one commercial address | CONTEXTUAL_LINK |
-| Geographic Convergence | 2 cases with operational events at same hub | CONTEXTUAL_LINK |
-| Benign Household Counterexample | Shared address + IP, distinct devices + PAN | CONTEXTUAL_LINK (not escalated) |
-
-Every finding exposes typed entity counts, excluded neighbors, supporting edge IDs, and deterministic explanation. Raw graph degree is never substituted for a typed business count.
-
----
-
-## What is real and what is synthetic
-
-| | Status |
-|---|---|
-| Next.js / React / TypeScript application | Real |
-| Six-layer deterministic provenance graph engine | Real |
-| Edge weight computation (recency decay, proxy trust penalty) | Real |
-| 131 permanent regression assertions | Real |
-| Researched catalogue of 46 APIs, 42 fields, 77 signals | Real research, synthetic presentation |
-| Evidence shares, location hypotheses, address consistency | Deterministically computed at runtime from synthetic inputs |
-| Knowledge Graph (273 nodes, 115 edges) | Fully auditable, ZERO heuristic edges |
-| Entity Network (79 nodes, 61 relationships) | 100% synthetic fixture dataset |
-| Any live API call | None |
-| Any real customer data | None |
-| Any ML / scoring model | None |
-| Any graph database | None |
-| Any Gemini / LLM integration | None |
-| Any authentication or persistence backend | None |
-
----
-
-## Explicit limitations
-
-1. Evidence shares are computed from synthetic weighted inputs, not from a calibrated statistical model.
-2. No live API integration. Nothing calls a real data source.
-3. All synthetic customers, applications, identifiers and addresses are fictional.
-4. Consent classification appears as labels only — there is no consent-gating logic in code.
-5. Masterclass pattern rules are labelled as demonstration rules, not statistically calibrated thresholds.
-
----
-
-## Stack
-
-Next.js 16.2 · React 19.2 · TypeScript 5 · Vanilla CSS (via Tailwind 4) · `@xyflow/react` 12.11 · Radix UI · lucide-react · xlsx
-
-## Running it
+## Run locally
 
 ```bash
 git clone https://github.com/tharungajula2/loc-iq.git
 cd loc-iq
-npm install
+npm ci
 npm run dev
 ```
 
-## Contact
+Open `http://localhost:3000`. `npm test` runs the repository's deterministic engine assertion script; `npm run lint` invokes ESLint. This documentation review inspected source and fixtures; it did not install dependencies, run a build, or verify a hosted deployment. See the [setup, worked examples, limitations, and source map](PROJECT_BLUEPRINT.md).
 
-Tharun Gajula · Bengaluru, India  
-[tharun.gajula.2@gmail.com](mailto:tharun.gajula.2@gmail.com) · [LinkedIn](https://linkedin.com/in/tharungajula) · [Portfolio](https://tharungajula.vercel.app)
+> **Use synthetic inputs only.** The UI accepts identifier-shaped strings, but this prototype has no consent workflow, authorization boundary, or operational privacy controls.
